@@ -23,7 +23,7 @@ public class TickerFragment extends Fragment {
     NumberFormat n = NumberFormat.getCurrencyInstance(Locale.US);
 
     public interface RefreshListener {
-        void onButtonPress();
+        void onTickerRefreshButtonPress();
     }
 
     public TickerFragment() {
@@ -59,12 +59,12 @@ public class TickerFragment extends Fragment {
             usdPerBtc = btce.getString("value");
             value = Float.parseFloat(usdPerBtc);
             usdPerBtc = n.format(value);
-            Log.d("123btc", usdPerBtc);
+            Log.d("cException", usdPerBtc);
             // TODO add daily change data also
 
         }
         catch (Exception e) {
-            Log.d("TickerException", e.toString());
+            Log.d("cException", e.toString());
         }
 
         String timestampText = getResources().getString(R.string.last_updated, timestamp);
@@ -75,7 +75,7 @@ public class TickerFragment extends Fragment {
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onButtonPress();
+                listener.onTickerRefreshButtonPress();
             }
         };
         refresh.setOnClickListener(ocl);

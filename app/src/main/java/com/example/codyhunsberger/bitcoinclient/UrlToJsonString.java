@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
-class JSONData extends AsyncTask<String, Void, String> {
+class UrlToJsonString extends AsyncTask<String, Void, String> {
     // TODO rename this class to be more descriptive
     Context context;
     private onJsonReceivedListener listener;
@@ -22,14 +22,15 @@ class JSONData extends AsyncTask<String, Void, String> {
     }
 
     public interface onJsonReceivedListener {
-        void onDataReady(String json);
+        void onJsonReceived(String json);
     }
 
-    public JSONData (Context context) {
+    public UrlToJsonString(Context context) {
         this.context = context;
     }
 
     protected String doInBackground(String... urlString) {
+        Log.d("cException", "doInBackground urlString received: " + urlString);
         StringBuilder sb = new StringBuilder();
         URLConnection urlConn;
         InputStreamReader in = null;
@@ -52,7 +53,7 @@ class JSONData extends AsyncTask<String, Void, String> {
                 in.close();
             }
             else {
-                Log.d("null", "in is null");
+                Log.d("cException", "in is null");
             }
         }
         catch (Exception e) {
@@ -60,8 +61,9 @@ class JSONData extends AsyncTask<String, Void, String> {
         }
 
         String result = sb.toString();
-        listener.onDataReady(result);
-        Log.d("out", result);
+        Log.d("cException", "sb.toString() = " + result);
+        listener.onJsonReceived(result);
+        Log.d("cException", result);
         return result;
     }
 

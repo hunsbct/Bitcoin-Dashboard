@@ -50,4 +50,4 @@
 
 </LinearLayout>
 
-<!-- TODO fix layout so bottom buttons sit on bottom normal size, webview adjusts to fill remaining space -->
+<!-- FIXME layout so bottom buttons sit on bottom normal size, webview adjusts to fill remaining space -->

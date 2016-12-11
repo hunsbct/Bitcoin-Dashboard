@@ -1,5 +1,6 @@
 package com.example.codyhunsberger.bitcoinclient;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,14 +27,15 @@ public class WalletFragment extends Fragment {
 
     ArrayList<String> savedWallets;
     ArrayAdapter<String> listAdapter;
-    String newWalletAddress, jsonString, address, balance, isUnknown;
+    String walletAddress, jsonString, address, balance, isUnknown;
     JSONObject jsonObj, data;
     Double balanceDouble;
     DecimalFormat df = new DecimalFormat("#.####");
+    boolean listDataChanged;
     private WalletListener listener;
 
     public interface WalletListener {
-        void onEnterWallet(String walletAddress, ArrayList<String> savedWallets);
+        void onEnterWallet(String walletAddress);
     }
 
     public WalletFragment() {
@@ -43,15 +46,19 @@ public class WalletFragment extends Fragment {
         WalletFragment fragment = new WalletFragment();
         Bundle args = new Bundle();
         args.putStringArrayList("savedWallets", wallets);
+        args.putString("jsonString", "");
+        args.putBoolean("listDataChanged", true);
+        // TODO confirm that true is the best default
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static WalletFragment newInstance(ArrayList<String> wallets, String json) {
+    public static WalletFragment newInstance(ArrayList<String> wallets, String json, boolean listDataChanged) {
         WalletFragment fragment = new WalletFragment();
         Bundle args = new Bundle();
         args.putStringArrayList("savedWallets", wallets);
         args.putString("jsonString", json);
+        args.putBoolean("listDataChanged", listDataChanged);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,24 +92,38 @@ public class WalletFragment extends Fragment {
         TextView addressTV = (TextView) v.findViewById(R.id.walletAddresstextView);
         TextView balanceTV = (TextView) v.findViewById(R.id.walletBalanceTextView);
 
-        savedWallets = getArguments().getStringArrayList("savedWallets");
-
-        if (savedWallets == null) {
+        try {
+            savedWallets = getArguments().getStringArrayList("savedWallets");
+        }
+        catch (NullPointerException npe) {
+            Log.d("cException", npe.toString());
             savedWallets = new ArrayList<>();
+            Toast.makeText(getActivity(), "Check saved wallets null pointed try/catch in WF.java",
+                    Toast.LENGTH_SHORT).show();
+            // TODO remove
         }
 
         jsonString = getArguments().getString("jsonString");
 
-        if (jsonString != null) {
+        if (jsonString.length() > 0) {
             try {
-                jsonString = getArguments().getString("jsonString");
                 jsonObj = new JSONObject(jsonString);
                 data = new JSONObject(jsonObj.getString("data"));
                 isUnknown = jsonObj.getString("is_unknown");
             } catch (Exception e) {
                 Log.d("cException", e.toString());
-            }
+            }/*
+*********   *********
+*           *       *
+*           *       *
+* ***       *       *
+*           *       *
+*           *       *
+*
+*
 
+
+*/
             if (isUnknown.equals("false")) {
                 try {
                     balance = data.getString("balance");
@@ -113,9 +134,13 @@ public class WalletFragment extends Fragment {
                     addressTV.setText(walletAddressText);
 
                     double balanceDouble = 8000.00236957;
+                    // TODO kill magic number
 
                     String walletBalanceText = getResources().getString(R.string.wallet_balance, df.format(balanceDouble));
                     balanceTV.setText(walletBalanceText);
+
+                    Toast.makeText(getActivity(), "Wallet is known.", Toast.LENGTH_SHORT).show();
+                    // TODO remove
 
                     // TODO add viewing for other wallet data at some point
                 }
@@ -124,23 +149,35 @@ public class WalletFragment extends Fragment {
                 }
             }
             else {
-                Toast.makeText(getActivity(), "Wallet address not found, please double check " +
-                        "address spelling and try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Wallet address not found by API, please double " +
+                        "check address spelling and try again.", Toast.LENGTH_SHORT).show();
             }
         }
-
-        EditText testEt = (EditText) v.findViewById(R.id.walletTestEditText);
+        else if (jsonString != null){
+            Toast.makeText(getActivity(), "args String with key \"jsonString\" is of length 0",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getActivity(), "args has no String with key \"jsonString\"",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         listAdapter = new ArrayAdapter<>(getActivity(), R.layout.main_list_rows, savedWallets);
+        listDataChanged = getArguments().getBoolean("listDataChanged");
         lv.setAdapter(listAdapter);
-        lv.deferNotifyDataSetChanged();
+        /*
+        if (listDataChanged) {
+            listAdapter.notifyDataSetChanged();
+        }
+        */
+        // TODO may not need this since it's being redrawn each time.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 String address = savedWallets.get(position);
-                Log.d("wallet", "Selected: " + address);
+                Log.d("cException", "Selected: " + address);
                 walletAddressEditText.setText(address);
             }
         });
@@ -149,21 +186,30 @@ public class WalletFragment extends Fragment {
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newWalletAddress = walletAddressEditText.getText().toString();
-                if (walletAddressEntryStructuralValidation(newWalletAddress)) {
-                    listener.onEnterWallet(newWalletAddress, savedWallets);
+                hideKeyboard(getActivity(), view);
+
+                walletAddress = walletAddressEditText.getText().toString();
+                if (walletAddressEntryStructuralValidation(walletAddress)) {
+                    listener.onEnterWallet(walletAddress);
+                    Toast.makeText(getActivity(), balance + " BTC", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getActivity(), "Please enter a valid wallet address " +
-                            "(length is currently " + newWalletAddress.length() +
+                            "(length is currently " + walletAddress.length() +
                             "). Must be 26-35 alphanumeric characters starting with 1 or 3.",
                             Toast.LENGTH_SHORT).show();
                 }
             }
         };
         button.setOnClickListener(ocl);
+        // TODO use notifyDataSetChanged() to update on the fly
 
         return v;
+    }
+
+    public static void hideKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public boolean walletAddressEntryStructuralValidation(String address) {

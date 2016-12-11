@@ -13,6 +13,8 @@
     <string name="wallet_address">Balance for address [%1$s]</string>
     <string name="wallet_balance">%1$s BTC</string>
 
+    <string name="banner_img_content_description">Bitcoin logo on dark blue background</string>
+
     <string name="last_updated">Last Updated on %1$s GMT</string>
     <string name="value_sources">via blockr.io API and BTC-e trade data</string>
 

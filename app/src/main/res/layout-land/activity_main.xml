@@ -3,16 +3,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.15"
-        android:id="@+id/imageView"
-        android:src="@drawable/btc_banner"/>
+        android:layout_weight="0.1"
+        android:background="@color/banner_blue">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:contentDescription="@string/banner_img_content_description"
+            android:src="@drawable/btc_banner" />
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.85">
+        android:layout_weight="0.9">
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="0dp"

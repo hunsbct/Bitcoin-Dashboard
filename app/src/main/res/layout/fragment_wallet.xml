@@ -52,20 +52,12 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.5"
         android:id="@+id/walletListView"
         android:layout_gravity="center_horizontal|top"
         tools:listitem="@android:layout/simple_expandable_list_item_1"
         android:textAlignment="center" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/walletTestEditText" />
-    <!-- TODO remove this before submission -->
-
-    <!--set width to match_parent for click listener to work on whole row instead of just text-->
 </LinearLayout>
+
+<!-- TODO add text description at top -->

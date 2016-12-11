@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity implements ListFragment.ListSelectionListener,
         WalletFragment.WalletListener,
-        JSONData.onJsonReceivedListener,
+        UrlToJsonString.onJsonReceivedListener,
         TickerFragment.RefreshListener {
     // class can implement several listeners separated with commas
 
     boolean twoPanes, walletDataSetChanged;
-    String jsonString;
+    String currentJsonString;
     ArrayList<String> savedWallets = new ArrayList<>();
-    JSONData jsonData;
+    UrlToJsonString urlToJsonString;
     // TODO save wallets between runs via sharedpreferences(?)
 
     @Override
@@ -43,11 +43,18 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
 
     }
 
-    public void onEnterWallet(String walletAddress, ArrayList<String> savedWallets) {
-        walletDataSetChanged = false;
-        this.savedWallets = savedWallets;
+    public void onEnterWallet(String walletAddress) {
+        String fullUrl;
+        // TODO remove
+
         boolean walletExists = false;
-        for(String w : savedWallets) {
+
+        int sw1 = savedWallets.size();
+        // TODO remove
+
+        Toast.makeText(this, "onEnterWallet received wallet address: " + walletAddress, Toast.LENGTH_SHORT).show();
+
+        for (String w : savedWallets) {
             if (w.equals(walletAddress)) {
                 walletExists = true;
             }
@@ -55,47 +62,61 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
         }
         if (!walletExists) {
             savedWallets.add(walletAddress);
-            walletDataSetChanged = true;
         }
-        Toast.makeText(this, walletAddress + " added = " + !walletExists + "\n Saved Wallets - " +
-                savedWallets.size(), Toast.LENGTH_LONG).show();
+
+        int sw2 = savedWallets.size();
+
+        urlToJsonString = new UrlToJsonString(this);
+        urlToJsonString.setOnJsonReceivedListener(this);
+        fullUrl = "http://btc.blockr.io/api/v1/address/info/" + walletAddress;
+        Toast.makeText(this, "fullUrl: " + fullUrl, Toast.LENGTH_SHORT).show();
+        urlToJsonString.execute(fullUrl);
+
+        String toastText;
+        if ((sw2 - sw1) > 0) {
+            toastText = walletAddress + " WAS added.\nLength is " + savedWallets.size() + ".";
+        }
+        else {
+            toastText = walletAddress + " was NOT added.\nLength went from " + sw1 +
+                    "to" + savedWallets.size() + ".";
+        }
+        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+        // TODO remove
+
+
+        Toast.makeText(this, "jsonString passed to Wallet.newInstance: " + currentJsonString, Toast.LENGTH_SHORT).show();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer,
+                WalletFragment.newInstance(savedWallets, currentJsonString, walletDataSetChanged));
     }
-    // Is called if entered wallet address is not already in listview of saved addresses
 
     @Override
-    public void onButtonPress() {
+    public void onTickerRefreshButtonPress() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         getTicker();
         if (!twoPanes) {
-            fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(jsonString))
+            fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(currentJsonString))
                     .addToBackStack(null)
                     .commit();
         }
         else {
-            fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(jsonString))
+            fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(currentJsonString))
                     .commit();
         }
     }
     // Still working on implementing this
 
-    public void getAddress(String address) {
-        jsonData = new JSONData(this);
-        jsonData.setOnJsonReceivedListener(this);
-        jsonData.execute("http://btc.blockr.io/api/v1/address/info/" + address);
-    }
-    // Still yet to get this wired to wallet address viewing fragment
-
     public void getTicker() {
-        jsonData = new JSONData(this);
-        jsonData.setOnJsonReceivedListener(this);
-        jsonData.execute("http://btc.blockr.io/api/v1/coin/info");
+        urlToJsonString = new UrlToJsonString(this);
+        urlToJsonString.setOnJsonReceivedListener(this);
+        urlToJsonString.execute("http://btc.blockr.io/api/v1/coin/info");
     }
     // Get json string for ticker data
 
-    @Override
-    public void onDataReady(String json){
-        jsonString = json;
+    public void onJsonReceived(String json){
+        currentJsonString = json;
     }
 
     @Override
@@ -104,14 +125,14 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (position) {
             case 0:
-                getTicker();
                 if (!twoPanes) {
-                    fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(jsonString))
+                    getTicker();
+                    fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(currentJsonString))
                         .addToBackStack(null)
                         .commit();
                 }
                 else {
-                    fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(jsonString))
+                    fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(currentJsonString))
                         .commit();
                 }
                 break;
@@ -161,3 +182,5 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
 // TODO rename to bitcoin dashboard
 // TODO add crappy ms paint icon
 // TODO change banner to image + bg color
+// FIXME ListView
+// Splash screen?
