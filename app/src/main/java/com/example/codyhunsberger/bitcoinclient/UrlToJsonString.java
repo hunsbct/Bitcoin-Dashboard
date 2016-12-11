@@ -30,7 +30,7 @@ class UrlToJsonString extends AsyncTask<String, Void, String> {
     }
 
     protected String doInBackground(String... urlString) {
-        Log.d("cException", "doInBackground urlString received: " + urlString);
+        Log.d("cExceptionUTJS", "doInBackground urlString received: " + urlString);
         StringBuilder sb = new StringBuilder();
         URLConnection urlConn;
         InputStreamReader in = null;
@@ -53,7 +53,7 @@ class UrlToJsonString extends AsyncTask<String, Void, String> {
                 in.close();
             }
             else {
-                Log.d("cException", "in is null");
+                Log.d("cExceptionUTJS", "in is null");
             }
         }
         catch (Exception e) {
@@ -61,14 +61,15 @@ class UrlToJsonString extends AsyncTask<String, Void, String> {
         }
 
         String result = sb.toString();
-        Log.d("cException", "sb.toString() = " + result);
+        Log.d("cExceptionUTJS", "sb.toString() = " + result);
         listener.onJsonReceived(result);
-        Log.d("cException", result);
+        Log.d("cExceptionUTJS", "Result sent to listener: " + result);
         return result;
     }
 
-    //protected void onPostExecute (String result) {
-        //listener.onDataReady(result);
-    //}
+    protected void onPostExecute (String result) {
+        listener.onJsonReceived(result);
+        Log.d("cExceptionUTJS", "Result sent out in onPostExecute: " + result);
+    }
 
 }

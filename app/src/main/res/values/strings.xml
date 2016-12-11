@@ -18,6 +18,10 @@
     <string name="last_updated">Last Updated on %1$s GMT</string>
     <string name="value_sources">via blockr.io API and BTC-e trade data</string>
 
+    <string name="radio_button_1d">1 Day</string>
+    <string name="radio_button_5d">5 Days</string>
+
+
     <string name="menu_title">Details</string>
     <string name="chart_spinner_prompt">Select a timeframe to view</string>
     <string name="chart_text">Select a time frame to view Bitcoin\'s value change</string>
@@ -25,22 +29,10 @@
     <string name="tickerJson">tickerJson</string>
     <string name="blockchain_description">View information about specific block:</string>
     <string name="blockchain_entry_description">Enter a block number to view:</string>
+    <string name="chart_refresh_timer_text">Auto Reload in %1$ss</string>
 
-    <string-array name="chart_spinner_array">
-        <item>1 Day</item>
-        <item>5 Days</item>
-        <!--
-        <item>1 Month</item>
-        <item>6 Months</item>
-        <item>1 Year</item>
-        <item>2 Years</item>
-
-        Add the rest back in in the event that Yahoo gets their shit together and actually returns
-        them for times beyond 5 days
-        -->
-
-    </string-array>
 
 </resources>
 
-    <!-- TODO add translation for one language of my choosing -->
+<!-- TODO add translation for one language of my choosing -->
+<!-- TODO group strings for neatness -->

@@ -38,7 +38,7 @@
         android:paddingEnd="20dp"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/walletAddressEditText" />
+        android:id="@+id/walletEditText" />
 
 
     <Button

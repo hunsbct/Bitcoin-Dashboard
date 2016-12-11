@@ -1,2 +1,4 @@
-Trying to track where wallet JSON data goes missing (it made it into the JSONData class I believe)
+00:29 Trying to track where wallet JSON data goes missing (it made it into the JSONData class I believe)
 using new Log statements.
+
+17:34 Making radiogroup work. Focus on translation next.

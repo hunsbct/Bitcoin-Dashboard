@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
         TickerFragment.RefreshListener {
     // class can implement several listeners separated with commas
 
-    boolean twoPanes, walletDataSetChanged;
+    boolean twoPanes;
     String currentJsonString;
     ArrayList<String> savedWallets = new ArrayList<>();
     UrlToJsonString urlToJsonString;
@@ -43,12 +44,11 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
 
     }
 
+    // String wallet address →
     public void onEnterWallet(String walletAddress) {
         String fullUrl;
         // TODO remove
-
         boolean walletExists = false;
-
         int sw1 = savedWallets.size();
         // TODO remove
 
@@ -65,30 +65,31 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
         }
 
         int sw2 = savedWallets.size();
+        // TODO remove
 
         urlToJsonString = new UrlToJsonString(this);
         urlToJsonString.setOnJsonReceivedListener(this);
         fullUrl = "http://btc.blockr.io/api/v1/address/info/" + walletAddress;
-        Toast.makeText(this, "fullUrl: " + fullUrl, Toast.LENGTH_SHORT).show();
+        Log.d("cExceptionMA", "fullUrl = " + fullUrl);
         urlToJsonString.execute(fullUrl);
 
         String toastText;
         if ((sw2 - sw1) > 0) {
             toastText = walletAddress + " WAS added.\nLength is " + savedWallets.size() + ".";
         }
+        // TODO keep and modify text
         else {
             toastText = walletAddress + " was NOT added.\nLength went from " + sw1 +
                     "to" + savedWallets.size() + ".";
         }
-        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
         // TODO remove
 
 
-        Toast.makeText(this, "jsonString passed to Wallet.newInstance: " + currentJsonString, Toast.LENGTH_SHORT).show();
+        Log.d("cExceptionMA", "currentJsonString passed to new wallet: " + currentJsonString);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer,
-                WalletFragment.newInstance(savedWallets, currentJsonString, walletDataSetChanged));
+                WalletFragment.newInstance(savedWallets, currentJsonString));
     }
 
     @Override
@@ -106,7 +107,7 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
                     .commit();
         }
     }
-    // Still working on implementing this
+    // note Still working on implementing this
 
     public void getTicker() {
         urlToJsonString = new UrlToJsonString(this);
@@ -117,6 +118,7 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
 
     public void onJsonReceived(String json){
         currentJsonString = json;
+        Log.d("cExceptionMA", "json string handled in MA listener: " + json);
     }
 
     @Override
@@ -177,10 +179,19 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
 
 }
 
+/*
+
+While it probably isn't the most efficient process to replace a fragment instance with a new one for
+each Interface call, it's the best I could do with the time I had.
+
+ */
+
 // TODO add hamburger menu?
 // TODO find memory leak
 // TODO rename to bitcoin dashboard
 // TODO add crappy ms paint icon
 // TODO change banner to image + bg color
-// FIXME ListView
+// FIX ListView
 // Splash screen?
+
+// NOTE Shift + Command + 8 toggles column/Insert mode
