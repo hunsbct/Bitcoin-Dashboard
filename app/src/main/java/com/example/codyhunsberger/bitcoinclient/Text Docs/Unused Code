@@ -1,0 +1,20 @@
+// Method: MainActivity
+// Description: interface listener that received the saved wallets list for some reason.
+
+public void onEnterWallet(String walletAddress, ArrayList<String> savedWallets) {
+    walletDataSetChanged = false;
+    this.savedWallets = savedWallets;
+    boolean walletExists = false;
+    for(String w : savedWallets) {
+        if (w.equals(walletAddress)) {
+            walletExists = true;
+        }
+        break;
+    }
+    if (!walletExists) {
+        savedWallets.add(walletAddress);
+        walletDataSetChanged = true;
+    }
+    Toast.makeText(this, walletAddress + " added = " + !walletExists + "\n Saved Wallets - " +
+            savedWallets.size(), Toast.LENGTH_LONG).show();
+}

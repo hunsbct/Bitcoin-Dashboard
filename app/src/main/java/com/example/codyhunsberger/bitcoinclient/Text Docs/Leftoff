@@ -1,0 +1,2 @@
+Trying to track where wallet JSON data goes missing (it made it into the JSONData class I believe)
+using new Log statements.
