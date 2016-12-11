@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/fragment_chart"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChartFragment"
+    android:weightSum="1.0"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="@string/chart_text"
+        android:id="@+id/textView"
+        android:gravity="bottom"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp" />
+    <Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/chart_spinner"
+        android:entries="@array/chart_spinner_array"
+        android:prompt="@string/chart_spinner_prompt" />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/chartWebView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.6"
+        android:paddingLeft="10dp" />
+
+    <Button
+    android:id="@+id/chart_spinner_button"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+        android:layout_weight="0.1"
+    android:background="@drawable/button_select"
+    android:textColor="@color/white"
+    android:text="@string/load_button" />
+
+</LinearLayout>
+
+<!-- TODO fix layout so bottom buttons sit on bottom normal size, webview adjusts to fill remaining space -->

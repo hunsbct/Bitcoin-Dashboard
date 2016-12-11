@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1.0"
+    android:id="@+id/fragment_ticker"
+    tools:context=".TickerFragment"
+    android:padding="10dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:text="@string/current_value_text"
+        android:id="@+id/currentValueTextViewDescription"
+        android:layout_gravity="center_horizontal|top" />
+    <!-- TODO make more visually appealing -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textSize="80sp"
+        android:id="@+id/currentValueTextViewPrice"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.5"
+        android:padding="10dp"
+        android:text="$760.24"
+        android:textStyle="bold"
+        android:gravity="center_vertical|end" />
+    <!-- TODO remove placeholder preview text here -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="@string/last_updated"
+        android:id="@+id/currentValueTextViewTimestamp"
+        android:gravity="bottom|right" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="@string/value_sources"
+        android:id="@+id/currentValueTextViewSources"
+        android:gravity="right|top" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="@string/refresh_button"
+        android:id="@+id/currentValueRefreshButton"
+        android:background="@drawable/button_select"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
+
+<!-- TODO add textview with quick description at the top of each fragment -->
+<!-- TODO create landscape variations for everything -->

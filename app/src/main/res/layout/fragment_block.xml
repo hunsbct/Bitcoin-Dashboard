@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1.0"
+    android:id="@+id/fragment_block"
+    tools:context=".BlockFragment"
+    android:padding="10dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="@string/blockchain_description"
+        android:id="@+id/blockchainDescription"
+        android:layout_gravity="center_horizontal|top" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textSize="60sp"
+        android:id="@+id/blockchainData"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.5" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/blockchain_entry_description"
+        android:textSize="20sp"
+        android:id="@+id/blockChainEntryTextView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.1"
+        android:paddingLeft="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="match_parent"
+            android:id="@+id/blockNumberEditText" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/load_button"
+            android:id="@+id/blockNumberLoadButton"
+            android:background="@drawable/button_select" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/previous_button"
+            android:id="@+id/blockchainPreviousButton"
+            android:background="@drawable/button_select" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/next_button"
+            android:id="@+id/blockchainNextButton"
+            android:background="@drawable/button_select"/>
+    </LinearLayout>
+</LinearLayout>
+
+    <!-- TODO add textview with quick description at the top of each fragment -->
+    <!-- TODO add timestamp to confirm accuracy -->

@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_list"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.codyhunsberger.bitcoinclient.ListFragment">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listview"
+        android:layout_gravity="center_horizontal|top"
+        tools:listitem="@android:layout/simple_expandable_list_item_1" />
+
+    <!--set width to match_parent for click listener to work on whole row instead of just text-->
+</LinearLayout>
