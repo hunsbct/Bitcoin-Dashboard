@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:weightSum="1.0"
+
     tools:context="com.example.codyhunsberger.bitcoinclient.MainActivity">
     <FrameLayout
         android:layout_width="match_parent"

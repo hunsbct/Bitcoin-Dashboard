@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.05"
-        android:text="@string/chart_text"
+        android:text="@string/chart_description"
         android:id="@+id/textView"
         android:gravity="bottom"
         android:paddingStart="10dp"
@@ -23,6 +23,15 @@
         android:layout_height="0dp"
         android:layout_weight="0.05" />
 
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/chartWebView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.5"
+        android:padding="10dp"
+        />
+
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -30,33 +39,30 @@
         android:layout_weight="0.1"
         android:orientation="horizontal"
         android:id="@+id/chart_radio_group"
-        android:checkedButton="@+id/radioButton1d">
-            <RadioButton
-                android:layout_width="wrap_content"
+        android:checkedButton="@+id/radioButton1d"
+        android:background="@color/banner_blue"
+        android:weightSum="1.0">
+
+        <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="0.50"
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:text="@string/radio_button_1d"
+                android:textColor="@color/white"
                 android:id="@+id/radioButton1d"
-                android:onClick="onRadioButtonClicked" />
+                android:textAlignment="center"/>
 
             <RadioButton
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.35"
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:text="@string/radio_button_5d"
+                android:textColor="@color/white"
                 android:id="@+id/radioButton5d"
-                android:onClick="onRadioButtonClicked" />
+                android:textAlignment="center"/>
     </RadioGroup>
-    <!-- TODO align buttons at end of RadioGroup -->
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/chartWebView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.5"
-        android:paddingLeft="10dp" />
-
 
     <TextView
         android:layout_width="match_parent"
@@ -64,8 +70,9 @@
         android:layout_weight="0.1"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/chart_refresh_timer_text"
-        android:id="@+id/chartRefreshTimerTextview" />
-
+        android:id="@+id/chartRefreshTimerTextview"
+        android:textAlignment="textEnd" />
+<!--
     <Button
     android:id="@+id/chart_spinner_button"
     android:layout_width="match_parent"
@@ -74,6 +81,8 @@
     android:background="@drawable/button_select"
     android:textColor="@color/white"
     android:text="@string/load_button" />
+    -->
+    <!-- FIX remove button -->
 
 </LinearLayout>
 

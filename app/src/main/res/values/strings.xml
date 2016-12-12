@@ -1,38 +1,41 @@
 <resources>
 
+    <!-- General -->
     <string name="app_name">BTC Dashboard</string>
+    <string name="banner_img_content_description">Bitcoin logo on dark blue background</string>
+    <!-- A warning suggested a content description for some handicap accessibility features -->
 
-    <!-- Buttons -->
+    <!-- Shared -->
     <string name="load_button">Load</string>
     <string name="refresh_button">Refresh</string>
     <string name="create_button">Create</string>
     <string name="previous_button">Previous Block</string>
     <string name="next_button">Next Block</string>
-    <string name="wallet_button">View Wallet Data</string>
 
+    <!-- Wallet Fragment -->
+    <string name="wallet_button">View Wallet Data</string>
     <string name="wallet_address">Balance for address [%1$s]</string>
     <string name="wallet_balance">%1$s BTC</string>
 
-    <string name="banner_img_content_description">Bitcoin logo on dark blue background</string>
-
+    <!-- Ticker Fragment -->
+    <string name="current_value_text">Current Market Value</string>
     <string name="last_updated">Last Updated on %1$s GMT</string>
     <string name="value_sources">via blockr.io API and BTC-e trade data</string>
 
+
+    <!-- Chart Fragment -->
+    <string name="chart_description">Select a time frame to view Bitcoin\'s value change</string>
     <string name="radio_button_1d">1 Day</string>
     <string name="radio_button_5d">5 Days</string>
-
-
-    <string name="menu_title">Details</string>
-    <string name="chart_spinner_prompt">Select a timeframe to view</string>
-    <string name="chart_text">Select a time frame to view Bitcoin\'s value change</string>
-    <string name="current_value_text">Current Market Value</string>
-    <string name="tickerJson">tickerJson</string>
-    <string name="blockchain_description">View information about specific block:</string>
-    <string name="blockchain_entry_description">Enter a block number to view:</string>
     <string name="chart_refresh_timer_text">Auto Reload in %1$ss</string>
 
+    <!-- Block Fragment -->
+    <string name="blockchain_description">View information about specific block:</string>
+    <string name="blockchain_entry_description">Enter a block number to view:</string>
+
+    <!-- Junk -->
+    <string name="menu_title">Details</string>
 
 </resources>
 
 <!-- TODO add translation for one language of my choosing -->
-<!-- TODO group strings for neatness -->

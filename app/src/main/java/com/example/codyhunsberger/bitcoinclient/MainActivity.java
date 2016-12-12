@@ -107,7 +107,7 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
                     .commit();
         }
     }
-    // note Still working on implementing this
+    // FIX Still working on implementing this
 
     public void getTicker() {
         urlToJsonString = new UrlToJsonString(this);

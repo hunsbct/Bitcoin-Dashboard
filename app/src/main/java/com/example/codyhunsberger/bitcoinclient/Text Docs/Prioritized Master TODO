@@ -1,0 +1,22 @@
+A. MISSING CORE PROMPT REQUIREMENTS
+> 1. Block Fragment (requires item B2)
+
+B. BROKEN CORE PROMPT REQUIREMENTS
+> 1. Chart auto refresh
+> 2. JSON Data display in Wallet Fragment
+> 3. Memory leak/loading thing
+> 4. Chart Fragment leaks like a faucet, timer starts going nuts after a few minutes
+
+C. MOST APP IMPROVEMENT PER TIME COST
+> 1. Layout tweaking
+    > 1a. Button in Ticker/Auto Refresh (requires item B1)
+> 3. Long press Wallet ListView item to remove.
+
+D. LESS IMPORTANT
+> 1. Ticker takes a second load to display data
+
+
+E. LEAST IMPORTANT
+> 1. Browse IDE warnings and modify accordingly
+
+

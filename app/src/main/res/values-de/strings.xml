@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">BTC Instrumententafel</string>
+    <string name="banner_img_content_description">Bitcoin logo auf dunkelblauem Hintergrund</string>
+    <!-- A warning suggested a content description for some handicap accessibility features -->
+
+    <!-- Shared -->
+    <string name="load_button">Herunterladen</string>
+    <string name="refresh_button">Aktualisiert</string>
+    <string name="create_button">Erstellen</string>
+    <string name="previous_button">Vorherigen Block</string>
+    <string name="next_button">Nächsten Block</string>
+
+    <!-- Wallet Fragment -->
+    <string name="wallet_button">Ansicht Brieftasche-Daten</string>
+    <string name="wallet_address">Balance für Brieftasche-Nummer [%1$s]</string>
+    <string name="wallet_balance">%1$s BTC</string>
+
+    <!-- Ticker Fragment -->
+    <string name="current_value_text">Aktuellen Marktwert </string>
+    <string name="last_updated">Zuletzt aktualisiert am %1$s GMT</string>
+    <string name="value_sources">Durch blockr.io API und BTC-e Handelsdaten</string>
+
+
+    <!-- Chart Fragment -->
+    <string name="chart_description">Wählen Sie einen Zeitrahmen, um die Werteänderung von Bitcoin anzuzeigen</string>
+    <string name="radio_button_1d">1 Tag</string>
+    <string name="radio_button_5d">5 Tage</string>
+    <string name="chart_refresh_timer_text">Seite aktualisieren am %1$ss</string>
+
+    <!-- Block Fragment -->
+    <string name="blockchain_description">Informationen zu einem bestimmten Block anzeigen:</string>
+    <string name="blockchain_entry_description">Geben Sie eine Blocknummer ein, die Sie anzeigen möchten:</string>
+
+    <!-- Junk -->
+    <string name="menu_title">Einzelheiten</string>
+
+</resources>

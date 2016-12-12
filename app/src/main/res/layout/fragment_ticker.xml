@@ -26,10 +26,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.5"
         android:padding="10dp"
-        android:text="$760.24"
         android:textStyle="bold"
         android:gravity="center_vertical|end" />
-    <!-- TODO remove placeholder preview text here -->
 
     <TextView
         android:layout_width="match_parent"
@@ -37,14 +35,14 @@
         android:layout_weight="0.05"
         android:text="@string/last_updated"
         android:id="@+id/currentValueTextViewTimestamp"
-        android:gravity="bottom|right" />
+        android:gravity="bottom|end" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.05"
         android:text="@string/value_sources"
         android:id="@+id/currentValueTextViewSources"
-        android:gravity="right|top" />
+        android:gravity="end|top" />
 
     <Button
         android:layout_width="match_parent"
@@ -58,3 +56,4 @@
 </LinearLayout>
 
 <!-- TODO add textview with quick description at the top of each fragment -->
+<!-- FIX make layouts match each other, no hodgepodge of shit -->

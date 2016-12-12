@@ -74,8 +74,8 @@
         <item>2 Years</item>
     </string-array>
 
-    // ChartFragment
-    // Button OCL for pulling spinner selection
+    // Class: ChartFragment
+    // Description: Button OCL for pulling spinner selection
 
      Button button = (Button) v.findViewById(R.id.chart_spinner_button);
              View.OnClickListener ocl = new View.OnClickListener() {
@@ -102,7 +102,6 @@
                          case "2 Years":
                              chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=2Y";
                              break;
-                         // NOTE add back in if Yahoo ever gets their chart links working
                          default:
                              chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1d";
                              break;
@@ -119,3 +118,43 @@
                  }
              };
              button.setOnClickListener(ocl);
+
+    // Class: ChartFragment
+    // Description: setWebViewClient method for cwv to display loading graphics
+
+    loadingFinished = true;
+    redirect = false;
+
+    cwv.setWebViewClient(new WebViewClient() {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView wv, String enteredUrl) {
+            if (!loadingFinished) {
+                redirect = true;
+            }
+
+            loadingFinished = false;
+            wv.loadUrl(enteredUrl);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(
+                WebView wv, String enteredUrl, Bitmap favicon) {
+            super.onPageStarted(wv, enteredUrl, favicon);
+            loadingFinished = false;
+            //SHOW LOADING IF IT ISNT ALREADY VISIBLE
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if(!redirect){
+                loadingFinished = true;
+            }
+
+            if(loadingFinished && !redirect){
+                //HIDE LOADING IT HAS FINISHED
+            } else{
+                redirect = false;
+            }
+        }
+    });
