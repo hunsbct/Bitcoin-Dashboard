@@ -1,6 +1,7 @@
 package com.example.codyhunsberger.bitcoinclient;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -19,26 +20,53 @@ public class MainActivity extends Activity implements ListFragment.ListSelection
     String currentJsonString;
     ArrayList<String> savedWallets = new ArrayList<>();
     UrlToJsonString urlToJsonString;
-    // TODO save wallets between runs via sharedpreferences(?)
+    Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction;
 
         twoPanes = (findViewById(R.id.fragmentContainer2) != null);
-        //  Determine if only one or two panes are visible
+        //  Determine how many panes are visible
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer, new ListFragment());
-        fragmentTransaction.commit();
-        //  Load this fragment by default
-
-        if (twoPanes){
+        fragment = fragmentManager.findFragmentByTag("Container1Frag");
+        // Opted to use tag instead of ID here since several different fragments can swap in and
+        // out of the same container.
+        if (fragment == null) {
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.fragmentContainer2, new TickerFragment());
+            fragmentTransaction.add(R.id.fragmentContainer, new ListFragment(), "Container1Tag");
             fragmentTransaction.commit();
+            //  Load this fragment by default
+    Log.d("cExceptionF2 - MA- oc", "New listfrag.");
+        }
+        else {
+    Log.d("cExceptionF2 - MA- oc", "Frag1 exists. ID = " + fragment.getId());
+        }
+
+        fragment = fragmentManager.findFragmentByTag("Container2Frag");
+
+        if(twoPanes && (fragment == null)) {
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.fragmentContainer2, new TickerFragment(),
+                                        "Container2Frag").commit();
+    Log.d("cExceptionF2 - MA - oc", "Fragment 2 added");
+        }
+        else if(!twoPanes && (fragment != null)) {
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.detach(fragment);
+    Log.d("cExceptionF2 - MA - oc", "Fragment 2 removed");
+        }
+        else {
+            if (fragment == null) {
+    Log.d("cExceptionF2 - MA - oc", "!twoPanes and fragment 2 is null");
+            }
+            else {
+    Log.d("cExceptionF2 - MA - oc", "Two panes and fragment 2 exists.");
+    Log.d("cExceptionF2 - MA - oc", "Fragment 2 = " + fragment.getId());
+            }
         }
         // Add second fragment if twoPanes, use TickerFragment by default as per prompt
 

@@ -23,7 +23,7 @@ public class ListFragment extends Fragment {
     private ListSelectionListener listener;
 
     public ListFragment() {
-        // Required empty public constructor
+
     }
 
     public interface ListSelectionListener {
@@ -33,13 +33,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ListSelectionListener) {
-            listener = (ListSelectionListener) context;
-        }
-        else {
-            throw new ClassCastException(context.toString()
-                    + " must implement MyListFragment.OnItemSelectedListener");
-        }
+        listener = (ListSelectionListener) context;
     }
 
     @Override

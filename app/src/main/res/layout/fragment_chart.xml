@@ -50,6 +50,7 @@
                 android:padding="10dp"
                 android:text="@string/radio_button_1d"
                 android:textColor="@color/white"
+                android:buttonTint="@color/bitcoin_orange"
                 android:id="@+id/radioButton1d"
                 android:textAlignment="center"/>
 
@@ -60,6 +61,7 @@
                 android:padding="10dp"
                 android:text="@string/radio_button_5d"
                 android:textColor="@color/white"
+                android:buttonTint="@color/bitcoin_orange"
                 android:id="@+id/radioButton5d"
                 android:textAlignment="center"/>
     </RadioGroup>

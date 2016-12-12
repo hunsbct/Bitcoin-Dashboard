@@ -20,7 +20,6 @@ import android.widget.Toast;
 public class ChartFragment extends Fragment {
 	String chartUrl, chartRefreshTimerText;
 	WebView cwv;
-	boolean loadingFinished, redirect;
 	int secondsUntilFinished;
 	CountDownTimer cdt;
 	TextView timerText;
@@ -120,3 +119,5 @@ public class ChartFragment extends Fragment {
 		return (int) l;
 	}
 }
+
+// NOTE: Yahoo chart resource pulls 512x288px PNG
