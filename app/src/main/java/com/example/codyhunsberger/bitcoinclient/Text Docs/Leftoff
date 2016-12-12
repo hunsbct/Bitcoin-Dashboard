@@ -1,4 +1,3 @@
-00:29 Trying to track where wallet JSON data goes missing (it made it into the JSONData class I believe)
-using new Log statements.
-
-17:34 Making radiogroup work. Focus on translation next.
+12-12 04:44
+Serious back end changes that will hopefully tackle memory leakage AND implement fragment
+reusability.

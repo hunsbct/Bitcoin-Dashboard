@@ -24,5 +24,5 @@ public class BlockFragment extends Fragment {
         return v;
     }
 
-    // TODO copy, paste, and modify ticker fragment code
+    // todo copy, paste, and modify ticker fragment code
 }

@@ -10,216 +10,168 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements ListFragment.ListSelectionListener,
-        WalletFragment.WalletListener,
-        UrlToJsonString.onJsonReceivedListener,
-        TickerFragment.RefreshListener {
-    // class can implement several listeners separated with commas
+public class MainActivity extends Activity implements
+		ListFragment.ListSelectionListener,
+		WalletFragment.WalletListener,
+		UrlToJsonString.onJsonReceivedListener {
+	// class can implement several listeners separated with commas
 
-    boolean twoPanes;
-    String currentJsonString;
-    ArrayList<String> savedWallets = new ArrayList<>();
-    UrlToJsonString urlToJsonString;
-    Fragment fragment;
+	boolean twoPanes;
+	String currentJsonString;
+	ArrayList<String> savedWallets = new ArrayList<>();
+	Fragment fragment;
+	FragmentManager fragmentManager = getFragmentManager();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        twoPanes = (findViewById(R.id.fragmentContainer2) != null);
-        //  Determine how many panes are visible
+		FragmentTransaction fragmentTransaction;
+		twoPanes = (findViewById(R.id.fragmentContainerB) != null);
+		//  Determine how many panes are visible
 
-        fragment = fragmentManager.findFragmentByTag("Container1Frag");
-        // Opted to use tag instead of ID here since several different fragments can swap in and
-        // out of the same container.
-        if (fragment == null) {
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.fragmentContainer, new ListFragment(), "Container1Tag");
-            fragmentTransaction.commit();
-            //  Load this fragment by default
-    Log.d("cExceptionF2 - MA- oc", "New listfrag.");
-        }
-        else {
-    Log.d("cExceptionF2 - MA- oc", "Frag1 exists. ID = " + fragment.getId());
-        }
+		fragment = fragmentManager.findFragmentByTag("Container1Tag");
+		// Opted to use tag instead of ID here since we want to check that location not the type
+		if(fragment == null) {
+			fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.add(R.id.fragmentContainerA, new ListFragment(), "Container1Tag");
+			fragmentTransaction.commit();
+			//  Load this fragment by default
+			Log.d("cExceptionF2 - MA- oc", "New listfrag added.");
+		}
+		else {
+			Log.d("cExceptionF2 - MA- oc", "Fragment1 exists. ID = " + fragment.getId());
+		}
 
-        fragment = fragmentManager.findFragmentByTag("Container2Frag");
+		fragment = fragmentManager.findFragmentByTag("Container2Tag");
 
-        if(twoPanes && (fragment == null)) {
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.fragmentContainer2, new TickerFragment(),
-                                        "Container2Frag").commit();
-    Log.d("cExceptionF2 - MA - oc", "Fragment 2 added");
-        }
-        else if(!twoPanes && (fragment != null)) {
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.detach(fragment);
-    Log.d("cExceptionF2 - MA - oc", "Fragment 2 removed");
-        }
-        else {
-            if (fragment == null) {
-    Log.d("cExceptionF2 - MA - oc", "!twoPanes and fragment 2 is null");
-            }
-            else {
-    Log.d("cExceptionF2 - MA - oc", "Two panes and fragment 2 exists.");
-    Log.d("cExceptionF2 - MA - oc", "Fragment 2 = " + fragment.getId());
-            }
-        }
-        // Add second fragment if twoPanes, use TickerFragment by default as per prompt
+		if(twoPanes && (fragment == null)) {
+			fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.add(R.id.fragmentContainerB, new TickerFragment(),
+									"Container2Tag").commit();
+			Log.d("cExceptionF2 - MA - oc", "New fragment 2 added");
+		}
+		else if(!twoPanes && (fragment != null)) {
+			fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.detach(fragment);
+			Log.d("cExceptionF2 - MA - oc", "Fragment 2 detached");
+		}
+		else {
+			Log.d("cExceptionF2 - MA - oc", "No change.");
+		}
+		// Add second fragment if twoPanes, use TickerFragment by default as per prompt
 
-    }
+	}
 
-    // String wallet address →
-    public void onEnterWallet(String walletAddress) {
-        String fullUrl;
-        // TODO remove
-        boolean walletExists = false;
-        int sw1 = savedWallets.size();
-        // TODO remove
+	// Listener fired when valid wallet address is sent from WalletFragment
+	public void onEnterWallet(String walletAddress) {
+		String fullWalletApiUrl;
+		WalletFragment wf;
+		boolean walletExists = false;
 
-        Toast.makeText(this, "onEnterWallet received wallet address: " + walletAddress, Toast.LENGTH_SHORT).show();
+		d("onEnterWallet received wallet address: " + walletAddress);
 
-        for (String w : savedWallets) {
-            if (w.equals(walletAddress)) {
-                walletExists = true;
-            }
-            break;
-        }
-        if (!walletExists) {
-            savedWallets.add(walletAddress);
-        }
+		for(String w : savedWallets) {
+			if(w.equals(walletAddress)) {
+				walletExists = true;
+			}
+			break;
+		}
+		if(!walletExists) {
+			savedWallets.add(walletAddress);
+		}
 
-        int sw2 = savedWallets.size();
-        // TODO remove
+		fullWalletApiUrl = getResources().getString(R.string.wallet_api_url, walletAddress);
+		d("fullWalletApiUrl = " + fullWalletApiUrl);
+		//getTickerStringFromJson(fullWalletApiUrl);
+		d("currentJsonString passed to new wallet: " + currentJsonString);
+		wf = (WalletFragment) fragmentManager.findFragmentById(R.id.fragment_wallet);
 
-        urlToJsonString = new UrlToJsonString(this);
-        urlToJsonString.setOnJsonReceivedListener(this);
-        fullUrl = "http://btc.blockr.io/api/v1/address/info/" + walletAddress;
-        Log.d("cExceptionMA", "fullUrl = " + fullUrl);
-        urlToJsonString.execute(fullUrl);
+		if (wf != null) {
+			Log.d("cExceptionMAoew", "string passed to wallet update method = " +
+					currentJsonString);
+			wf.update(currentJsonString);
+		}
+		else {
+			Toast.makeText(this, "wf is somehow null in its own triggered event listener", Toast
+					.LENGTH_SHORT).show();
+		}
+	}
 
-        String toastText;
-        if ((sw2 - sw1) > 0) {
-            toastText = walletAddress + " WAS added.\nLength is " + savedWallets.size() + ".";
-        }
-        // TODO keep and modify text
-        else {
-            toastText = walletAddress + " was NOT added.\nLength went from " + sw1 +
-                    "to" + savedWallets.size() + ".";
-        }
-        // TODO remove
+	// add method to decide if it's two panes or not rather than a trillion if/elses
 
+	public void onJsonReceived(String json) {
+		currentJsonString = json;
+		d("json passed to onJsonReceived MainActivity method = " + currentJsonString);
+	}
 
-        Log.d("cExceptionMA", "currentJsonString passed to new wallet: " + currentJsonString);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer,
-                WalletFragment.newInstance(savedWallets, currentJsonString));
-    }
+	// In each case, we have to find out the orientation and whether or not the fragment already
+	// exists in memory
+	@Override
+	public void onListFragOptionSelected(int position) {
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		switch(position) {
+			case 0:
+				if(!twoPanes) {
+					fragmentTransaction.replace(R.id.fragmentContainerA,
+							TickerFragment.newInstance()).addToBackStack(null)
+							.commit();
+				}
+				else {
+					fragmentTransaction.replace(R.id.fragmentContainerB,
+							TickerFragment.newInstance()).commit();
+				}
+				break;
+			case 1:
+				if(!twoPanes) {
+					fragmentTransaction.replace(R.id.fragmentContainerA, new ChartFragment())
+							.addToBackStack(null)
+							.commit();
+				}
+				else {
+					fragmentTransaction.replace(R.id.fragmentContainerB, new ChartFragment())
+							.commit();
+				}
+				break;
+			case 2:
+				if(!twoPanes) {
+					fragmentTransaction.replace(R.id.fragmentContainerA, new BlockFragment())
+							.addToBackStack(null)
+							.commit();
+				}
+				else {
+					fragmentTransaction.replace(R.id.fragmentContainerB, new BlockFragment())
+							.commit();
+				}
+				break;
+			case 3:
+				if(!twoPanes) {
+					fragmentTransaction.replace(R.id.fragmentContainerA, WalletFragment.newInstance(savedWallets))
+							.addToBackStack(null)
+							.commit();
+				}
+				else {
+					fragmentTransaction.replace(R.id.fragmentContainerB, WalletFragment.newInstance(savedWallets))
+							.commit();
+				}
+				break;
+			default:
+				Toast.makeText(this, "Broken onListFragOptionSelected", Toast.LENGTH_SHORT).show();
+		}
+	}
 
-    @Override
-    public void onTickerRefreshButtonPress() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        getTicker();
-        if (!twoPanes) {
-            fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(currentJsonString))
-                    .addToBackStack(null)
-                    .commit();
-        }
-        else {
-            fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(currentJsonString))
-                    .commit();
-        }
-    }
-    // FIX Still working on implementing this
-
-    public void getTicker() {
-        urlToJsonString = new UrlToJsonString(this);
-        urlToJsonString.setOnJsonReceivedListener(this);
-        urlToJsonString.execute("http://btc.blockr.io/api/v1/coin/info");
-    }
-    // Get json string for ticker data
-
-    public void onJsonReceived(String json){
-        currentJsonString = json;
-        Log.d("cExceptionMA", "json string handled in MA listener: " + json);
-    }
-
-    @Override
-    public void onOptionSelected(int position) {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        switch (position) {
-            case 0:
-                if (!twoPanes) {
-                    getTicker();
-                    fragmentTransaction.replace(R.id.fragmentContainer, TickerFragment.newInstance(currentJsonString))
-                        .addToBackStack(null)
-                        .commit();
-                }
-                else {
-                    fragmentTransaction.replace(R.id.fragmentContainer2, TickerFragment.newInstance(currentJsonString))
-                        .commit();
-                }
-                break;
-            case 1:
-                if (!twoPanes) {
-                    fragmentTransaction.replace(R.id.fragmentContainer, new ChartFragment())
-                            .addToBackStack(null)
-                            .commit();
-                }
-                else {
-                    fragmentTransaction.replace(R.id.fragmentContainer2, new ChartFragment())
-                            .commit();
-                }
-                break;
-            case 2:
-                if (!twoPanes) {
-                    fragmentTransaction.replace(R.id.fragmentContainer, new BlockFragment())
-                            .addToBackStack(null)
-                            .commit();
-                }
-                else {
-                    fragmentTransaction.replace(R.id.fragmentContainer2, new BlockFragment())
-                            .commit();
-                }
-                break;
-            case 3:
-                if (!twoPanes) {
-                    fragmentTransaction.replace(R.id.fragmentContainer, WalletFragment.newInstance(savedWallets))
-                            .addToBackStack(null)
-                            .commit();
-                }
-                else {
-                    fragmentTransaction.replace(R.id.fragmentContainer2, WalletFragment.newInstance(savedWallets))
-                            .commit();
-                }
-                break;
-            default:
-                Toast.makeText(this, "Broken onOptionSelected", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
+	// Reduce Log.d clutter
+	public void d (String msg) {
+		Log.d("cExceptionMA", msg);
+	}
+	// remove
 }
 
-/*
+// todo add hamburger menu?
+// todo find memory leak
+// todo rename to bitcoin dashboard
+// todo reuse fragments
+// fix ListView
 
-While it probably isn't the most efficient process to replace a fragment instance with a new one for
-each Interface call, it's the best I could do with the time I had.
-
- */
-
-// TODO add hamburger menu?
-// TODO find memory leak
-// TODO rename to bitcoin dashboard
-// TODO add crappy ms paint icon
-// TODO change banner to image + bg color
-// FIX ListView
-// Splash screen?
-
-// NOTE Shift + Command + 8 toggles column/Insert mode
+// note Shift + Command + 8 toggles column/Insert mode

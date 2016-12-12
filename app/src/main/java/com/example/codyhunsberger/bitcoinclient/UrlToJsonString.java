@@ -13,24 +13,26 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 
 class UrlToJsonString extends AsyncTask<String, Void, String> {
-    // TODO rename this class to be more descriptive
-    Context context;
     private onJsonReceivedListener listener;
 
+    // remove
+    /*
     public void setOnJsonReceivedListener(onJsonReceivedListener listener){
         this.listener = listener;
     }
+    */
 
     public interface onJsonReceivedListener {
         void onJsonReceived(String json);
     }
 
     public UrlToJsonString(Context context) {
-        this.context = context;
+        listener = (onJsonReceivedListener) context;
+        //this.context = context;
     }
 
     protected String doInBackground(String... urlString) {
-        Log.d("cExceptionUTJS", "doInBackground urlString received: " + urlString);
+        Log.d("moneyshot", "Step 3. url received by UTJS = " + urlString[0]);
         StringBuilder sb = new StringBuilder();
         URLConnection urlConn;
         InputStreamReader in = null;

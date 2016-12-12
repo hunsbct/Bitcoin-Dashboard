@@ -84,8 +84,8 @@
     android:textColor="@color/white"
     android:text="@string/load_button" />
     -->
-    <!-- FIX remove button -->
+    <!-- fix remove button -->
 
 </LinearLayout>
 
-<!-- FIX layout so bottom buttons sit on bottom normal size, webview adjusts to fill remaining space -->
+<!-- fix layout so bottom buttons sit on bottom normal size, webview adjusts to fill remaining space -->

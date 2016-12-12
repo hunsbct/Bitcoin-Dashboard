@@ -5,6 +5,14 @@
     <string name="banner_img_content_description">Bitcoin logo on dark blue background</string>
     <!-- A warning suggested a content description for some handicap accessibility features -->
 
+    <!-- List Fragment -->
+    <string-array name="main_menu_items">
+        <item>Ticker</item>
+        <item>Value History Graph</item>
+        <item>Blockchain Viewing Tool</item>
+        <item>Find Wallet Balance By Address</item>
+    </string-array>
+
     <!-- Shared -->
     <string name="load_button">Load</string>
     <string name="refresh_button">Refresh</string>
@@ -16,11 +24,15 @@
     <string name="wallet_button">View Wallet Data</string>
     <string name="wallet_address">Balance for address [%1$s]</string>
     <string name="wallet_balance">%1$s BTC</string>
+    <string name="wallet_api_url">http://btc.blockr.io/api/v1/address/info/%1$s</string>
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Current Market Value</string>
-    <string name="last_updated">Last Updated on %1$s GMT</string>
+    <string name="last_updated">Price Last Updated on %1$s GMT</string>
+    <string name="last_download">Device Last Received Update %1$s</string>
+    <!-- remove -->
     <string name="value_sources">via blockr.io API and BTC-e trade data</string>
+    <string name="ticker_api_url">http://btc.blockr.io/api/v1/coin/info</string>
 
 
     <!-- Chart Fragment -->
@@ -38,4 +50,4 @@
 
 </resources>
 
-<!-- TODO add translation for one language of my choosing -->
+<!-- todo add translation for one language of my choosing -->

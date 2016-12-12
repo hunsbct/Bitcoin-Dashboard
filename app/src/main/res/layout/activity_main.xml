@@ -19,18 +19,18 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView"
             android:contentDescription="@string/banner_img_content_description"
-            android:src="@drawable/btc_banner" />
+            android:src="@mipmap/btc_banner" />
     </FrameLayout>
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:name="android.app.ListFragment"
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/fragmentContainerA"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.9"
         tools:layout="@layout/fragment_list" />
 
 </LinearLayout>
 
-<!-- FIX image sizing -->
+<!-- fix image sizing -->

@@ -89,7 +89,7 @@ public class ChartFragment extends Fragment {
 				chartRefreshTimerText = getResources().getString(
 						R.string.chart_refresh_timer_text, secondsUntilFinished);
 				timerText.setText(chartRefreshTimerText);
-				// TODO progress bar for reload?
+				// todo progress bar for reload?
 			}
 		}.start();
 	}
@@ -120,4 +120,4 @@ public class ChartFragment extends Fragment {
 	}
 }
 
-// NOTE: Yahoo chart resource pulls 512x288px PNG
+// note: Yahoo chart resource pulls 512x288px PNG

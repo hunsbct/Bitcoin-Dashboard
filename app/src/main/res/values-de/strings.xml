@@ -6,6 +6,14 @@
     <string name="banner_img_content_description">Bitcoin logo auf dunkelblauem Hintergrund</string>
     <!-- A warning suggested a content description for some handicap accessibility features -->
 
+    <!-- List Fragment -->
+    <string-array name="main_menu_items">
+        <item>Börsenticker</item>
+        <item>Werthistorie</item>
+        <item>Block Ketten Anzeigewerkzeug</item>
+        <item>Suche nach Brieftasche nach Adresse</item>
+    </string-array>
+
     <!-- Shared -->
     <string name="load_button">Herunterladen</string>
     <string name="refresh_button">Aktualisiert</string>

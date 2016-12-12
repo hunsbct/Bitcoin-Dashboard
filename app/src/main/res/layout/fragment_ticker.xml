@@ -16,7 +16,7 @@
         android:text="@string/current_value_text"
         android:id="@+id/currentValueTextViewDescription"
         android:layout_gravity="center_horizontal|top" />
-    <!-- TODO make more visually appealing -->
+    <!-- todo make more visually appealing -->
 
     <TextView
         android:layout_width="match_parent"
@@ -53,7 +53,15 @@
         android:background="@drawable/button_select"
         android:layout_gravity="center_horizontal" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="@string/last_download"
+        android:id="@+id/lastDownloadedTimestamp"
+        android:gravity="end|top" />
+
 </LinearLayout>
 
-<!-- TODO add textview with quick description at the top of each fragment -->
-<!-- FIX make layouts match each other, no hodgepodge of shit -->
+<!-- todo add textview with quick description at the top of each fragment -->
+<!-- fix make layouts match each other, no hodgepodge of shit -->
