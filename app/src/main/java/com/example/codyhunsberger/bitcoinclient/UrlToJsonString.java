@@ -32,7 +32,7 @@ class UrlToJsonString extends AsyncTask<String, Void, String> {
     }
 
     protected String doInBackground(String... urlString) {
-        Log.d("moneyshot", "Step 3. url received by UTJS = " + urlString[0]);
+        Log.d("pathtrace", "Step 3. url received by UTJS = " + urlString[0]);
         StringBuilder sb = new StringBuilder();
         URLConnection urlConn;
         InputStreamReader in = null;
@@ -63,15 +63,15 @@ class UrlToJsonString extends AsyncTask<String, Void, String> {
         }
 
         String result = sb.toString();
-        Log.d("cExceptionUTJS", "sb.toString() = " + result);
+        Log.d("pathtrace", "Step 3 sb.toString() = " + result);
         listener.onJsonReceived(result);
-        Log.d("cExceptionUTJS", "Result sent to listener: " + result);
+        Log.d("pathtrace", "Result sent to listener: " + result);
         return result;
     }
 
     protected void onPostExecute (String result) {
         listener.onJsonReceived(result);
-        Log.d("cExceptionUTJS", "Result sent out in onPostExecute: " + result);
+        Log.d("pathtrace", "Step 3 Result sent out in onPostExecute: " + result);
     }
 
 }

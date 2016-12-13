@@ -52,7 +52,7 @@ public class ListFragment extends Fragment {
         listOptionsAL.addAll(Arrays.asList(menuOptionsArray));
         lv.setAdapter(
                 new ArrayAdapter<>(getActivity(),
-                R.layout.main_list_rows, listOptionsAL)
+                                   R.layout.list_rows, listOptionsAL)
         );
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

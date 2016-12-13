@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/listview"
         android:layout_gravity="center_horizontal|top"
-        tools:listitem="@android:layout/simple_expandable_list_item_1" />
+        tools:listitem="@layout/list_rows" />
 
-    <!--set width to match_parent for click listener to work on whole row instead of just text-->
+    <!-- todo set width to match_parent for click listener to work on whole row instead of just text-->
 </LinearLayout>

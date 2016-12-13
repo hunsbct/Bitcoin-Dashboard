@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:textSize="16sp"
-    android:textAlignment="center">
+    android:textAlignment="textStart">
 </TextView>
 <!--set width to match_parent for click listener to work on whole area instead of just text-->

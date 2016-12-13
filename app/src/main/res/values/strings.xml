@@ -22,9 +22,10 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">View Wallet Data</string>
-    <string name="wallet_address">Balance for address [%1$s]</string>
+    <string name="wallet_address">Balance For Address [%1$s]</string>
     <string name="wallet_balance">%1$s BTC</string>
     <string name="wallet_api_url">http://btc.blockr.io/api/v1/address/info/%1$s</string>
+    <string name="long_click_desc">Long-press a saved address to remove.</string>
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Current Market Value</string>

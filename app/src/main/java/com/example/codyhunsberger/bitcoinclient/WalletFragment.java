@@ -25,20 +25,21 @@ import java.util.ArrayList;
 
 // Add new form for entering wallet?
 public class WalletFragment extends Fragment {
-	ArrayList<String> savedWallets;
+	ArrayList<String> savedWallets = new ArrayList<>();
 	ArrayAdapter<String> listAdapter;
 	double balanceDouble;
 	String walletAddress, walletAddressFormatted = "", walletBalanceFormatted = "", jsonString,
-			balance = "", isUnknown = "", receivedWalletAddress;
+			balance = "", isUnknown = "";
 	JSONObject jsonObj, data;
 	TextView addressTV, balanceTV;
 	DecimalFormat df = new DecimalFormat("#.###");
 	// todo set df to desired final format
-	private WalletListener listener;
+	private WalletListUpdateListener listener;
 
-	public interface WalletListener {
-		void onEnterWallet(String walletAddress);
+	public interface WalletListUpdateListener {
+		void onEnterWallet(String walletAddress, boolean isAdding);
 	}
+
 
 	public WalletFragment() {
 		// Required empty public constructor
@@ -65,27 +66,14 @@ public class WalletFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-/*
-		Method outline:
-        -Declare variables
-        -Get args
-        -Check received JSON String and walletList for null or empty
-            -If json length not zero, set variables from JSON
-                -Format text
-			-Else if wallet has 1+ items
-				-set edittext to first item
-        -Set button ocl
-        -Set listView ocl
-        -Display text
-*/
 		View v = inflater.inflate(R.layout.fragment_wallet, container, false);
+		// True if adding wallet, false if removing
 		ListView lv = (ListView) v.findViewById(R.id.walletListView);
 		final EditText walletEditText = (EditText) v.findViewById(R.id.walletEditText);
 		Button button = (Button) v.findViewById(R.id.createWalletButton);
 		addressTV = (TextView) v.findViewById(R.id.walletAddresstextView);
 		balanceTV = (TextView) v.findViewById(R.id.walletBalanceTextView);
 		jsonString = "";
-		savedWallets = new ArrayList<>();
 		walletAddressFormatted = "";
 		walletBalanceFormatted = "";
 
@@ -132,18 +120,30 @@ public class WalletFragment extends Fragment {
 			// and walletBalanceFormatted
 		}
 
-		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.main_list_rows, savedWallets);
+		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_rows, savedWallets);
 		lv.setAdapter(listAdapter);
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				hideKeyboard(getActivity(), view);
 				walletAddress = savedWallets.get(position);
-				walletEditText.setText(receivedWalletAddress);
+				walletEditText.setText(walletAddress);
 			}
 		});
 
-		View.OnClickListener ocl = new View.OnClickListener() {
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
+					id) {
+				String walletToRemove = savedWallets.get(position);
+				savedWallets.remove(position);
+				listener.onEnterWallet(walletToRemove, false);
+				return true;
+			}
+		});
+
+
+		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				hideKeyboard(getActivity(), view);
@@ -152,7 +152,8 @@ public class WalletFragment extends Fragment {
 				Log.d("cException-WF-ocv-oc", "walletAddress set to = " + walletAddress +
 						"at button ocl");
 				if(walletAddressEntryStructuralValidation(walletAddress)) {
-					listener.onEnterWallet(walletAddress);
+					listener.onEnterWallet(walletAddress, true);
+					// Pass true if adding wallet, false to remove
 				}
 				else {
 					Toast.makeText(getActivity(), "Please enter a valid wallet address\n" +
@@ -161,8 +162,7 @@ public class WalletFragment extends Fragment {
 								   Toast.LENGTH_SHORT).show();
 				}
 			}
-		};
-		button.setOnClickListener(ocl);
+		});
 
 		if(!isNullOrEmpty(walletBalanceFormatted) && !isNullOrEmpty(walletAddressFormatted)) {
 			addressTV.setText(walletAddressFormatted);
@@ -189,13 +189,13 @@ public class WalletFragment extends Fragment {
 		try {
 			jsonObj = new JSONObject(jsonString);
 			data = new JSONObject(jsonObj.getString("data"));
-			receivedWalletAddress = jsonObj.getString("address");
+			walletAddress = jsonObj.getString("address");
 			isUnknown = jsonObj.getString("is_unknown");
 			// The JSON also passes an item called "is_valid", not sure the difference yet
 
 			Log.d("cException-WF-gifj", "data = " + data);
 			Log.d("cException-WF-gifj", "isUnknown = " + isUnknown);
-			Log.d("cException-WF-gifj", "receivedWalletAddress = " + receivedWalletAddress);
+			Log.d("cException-WF-gifj", "received walletAddress = " + walletAddress);
 
 			if(isUnknown.equals("false")) {
 				try {
@@ -204,7 +204,7 @@ public class WalletFragment extends Fragment {
 					df.setRoundingMode(RoundingMode.CEILING);
 
 					walletAddressFormatted = getResources().getString(R.string.wallet_address,
-																	  receivedWalletAddress);
+																	  walletAddress);
 					walletBalanceFormatted = getResources().getString(R.string.wallet_balance,
 																	  df.format(balanceDouble));
 
@@ -250,7 +250,7 @@ public class WalletFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		listener = (WalletListener) context;
+		listener = (WalletListUpdateListener) context;
 	}
 
 	@Override

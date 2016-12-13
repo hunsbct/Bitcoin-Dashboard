@@ -12,30 +12,20 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 public class TickerFragment extends Fragment implements UrlToJsonString.onJsonReceivedListener{
 
     float value;
-    String jsonString;
-    String[] attributes;
-    // Contains timestamp at index 0, lastDownloadedText at 1, and usdPerBtc at 2.
+    String jsonString = "", timestamp, timestampText, valueFormatted;
     NumberFormat n = NumberFormat.getCurrencyInstance(Locale.US);
-    JSONObject jsonObj, data, markets, btce;
-    TextView timestampTV, valueTV, lastDownloadTV;
+    JSONObject jsonObj = null, data, markets, btce;
+    TextView timestampTV, valueTV;
 
     public TickerFragment() {
 
     }
 
-    public static TickerFragment newInstance() {
-        TickerFragment tf = new TickerFragment();
-        tf.updateJsonString();
-        return tf;
-    }
-
-    // note Can newInstance be phased out via update methods?
     // todo clear unused imports in all classes
 
     @Override
@@ -43,42 +33,34 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
             savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_ticker, container, false);
-        final String usdPerBtc = "",
-                timestamp = "",
-                timestampText,
-                jsonString,
-                lastDownloadedText,
-                apiUrl = getResources().getString(R.string.ticker_api_url);
+        String apiUrl = getResources().getString(R.string.ticker_api_url);
 
         valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice);
         timestampTV = (TextView) v.findViewById(R.id.currentValueTextViewTimestamp);
-        lastDownloadTV = (TextView) v.findViewById(R.id.lastDownloadedTimestamp);
-        Log.d("moneyshot", "Step 1. url = " + apiUrl);
+        Log.d("pathtrace", "Step 1. url = " + apiUrl);
 
-        try {
-            jsonString = getArguments().getString("jsonString");
-            Log.d("cException", "tickerfragment args received: jsonstring = " + jsonString);
+        Log.d("pathtrace", "Step 1a. jsonstring before null check = " + jsonString);
+        if (jsonObj == null) {
+            updateJsonString();
         }
-        catch(Exception e) {
-            Log.d("cException", e.toString());
-            // fix This is being thrown
-        }
+        Log.d("pathtrace", "Step 1b. jsonstring after null check " + jsonString);
 
+        Log.d("pathtrace", "Step 1c. timestamp = " + timestamp);
+        Log.d("pathtrace", "Step 1c. valueFormatted = " + valueFormatted);
         timestampText = getResources().getString(R.string.last_updated, timestamp);
-        lastDownloadedText = getResources().getString(R.string.last_download, Calendar.getInstance());
+        Log.d("pathtrace", "Step 1c. timestampText = " + timestampText);
         timestampTV.setText(timestampText);
-        valueTV.setText(usdPerBtc);
-        lastDownloadTV.setText(lastDownloadedText);
-        Log.d("moneyshot", "Step 8: see it for yourself");
+        valueTV.setText(valueFormatted);
+        Log.d("pathtrace", "Step 1d: ?????");
 
         Button refresh = (Button) v.findViewById(R.id.currentValueRefreshButton);
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("moneyshot", "Step 9: starting over");
                 updateJsonString();
-                // listener.onTickerRefreshButtonPress();
-                // remove
+                timestampText = getResources().getString(R.string.last_updated, timestamp);
+                timestampTV.setText(timestampText);
+                valueTV.setText(valueFormatted);
             }
         };
         refresh.setOnClickListener(ocl);
@@ -89,37 +71,37 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
     @Override
     public void onJsonReceived(String json) {
         jsonString = json;
-        Log.d("moneyshot", "Steps 4 & 5. jsonString pulled from url = " + jsonString);
+        Log.d("pathtrace", "Step 4. jsonString got by receiving listener= " +
+                jsonString);
     }
 
-    public String[] updateJsonString() {
-        Log.d("moneyshot", "Step 2. and away she goes");
+    public void updateJsonString() {
+        Log.d("pathtrace", "Step 2. upDateJson fired");
+        Log.d("pathtrace", "Step 2a. jsonString before call to urltojsonstring = " + jsonString);
         UrlToJsonString urlToJsonString;
         urlToJsonString = new UrlToJsonString(getActivity());
         urlToJsonString.execute(getResources().getString(R.string.ticker_api_url));
+        Log.d("pathtrace", "Step 2b. jsonString after call to urltojsonstring = " + jsonString);
 
-        attributes = new String[3];
-
-        Log.d("moneyshot", "Step 6. jsonString sent to setVariablesFromJson = " + jsonString);
         try {
             jsonObj = new JSONObject(jsonString);
             data = new JSONObject(jsonObj.getString("data"));
             markets = new JSONObject(data.getString("markets"));
             btce = new JSONObject(markets.getString("btce"));
-            attributes[0] = formatTimestampData(btce.getString("last_update_utc"));
-            attributes[1] = Calendar.getInstance().toString();
-            attributes[2] = n.format(Float.parseFloat(btce.getString("value")));
+            timestamp = formatTimestampData(btce.getString("last_update_utc"));
+            value = Float.parseFloat(btce.getString("value"));
+            valueFormatted = n.format(value);
+            Log.d("pathtrace", "Step 2 complete");
         }
         catch (Exception e) {
-            Log.d("moneyshot", e.toString());
+            Log.d("pathtrace", "Step 2 exception thrown: " + e.toString());
         }
-        Log.d("moneyshot",
-              "Step 7. home stretch" +
-                      "\ntimestamp = " + attributes[0] +
-                      "\nusdPerBtc = " + attributes[2] +
+        Log.d("pathtrace",
+              "Step 3. variables set:" +
+                      "\ntimestamp = " + timestamp +
+                      "\nvalueFormatted = " + valueFormatted +
                       "\nvalue = " + value
         );
-        return attributes;
     }
 
     @Override
@@ -135,6 +117,25 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
     public String formatTimestampData(String timestamp) {
         return timestamp.replaceAll("T", " at ").replaceAll("Z", "");
     }
+
+    // Returns true only if s is not null and has nonzero length
+    public boolean isNullOrEmpty(String s) {
+        boolean result;
+        if(s == null) {
+            Log.d("cException-WF-inoe", "jsonString pulled from bundle in WF is null");
+            result = false;
+        }
+        else if(s.length() < 1) {
+            Log.d("cException-WF-inoe", "jsonString pulled from bundle in WF is length 0");
+            result = false;
+        }
+        else {
+            Log.d("cException-WF-inoe", "jsonString length is " + jsonString.length());
+            result = true;
+        }
+        return result;
+    }
+    // remove if unused
 
 }
 

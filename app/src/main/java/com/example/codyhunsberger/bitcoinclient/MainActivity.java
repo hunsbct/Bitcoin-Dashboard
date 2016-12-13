@@ -1,7 +1,6 @@
 package com.example.codyhunsberger.bitcoinclient;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -12,55 +11,42 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity implements
 		ListFragment.ListSelectionListener,
-		WalletFragment.WalletListener,
+		WalletFragment.WalletListUpdateListener,
 		UrlToJsonString.onJsonReceivedListener {
 	// class can implement several listeners separated with commas
 
-	boolean twoPanes;
+	boolean twoPanes, twoFrags;
 	String currentJsonString;
 	ArrayList<String> savedWallets = new ArrayList<>();
-	Fragment fragment;
 	FragmentManager fragmentManager = getFragmentManager();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		FragmentTransaction fragmentTransaction;
-		twoPanes = (findViewById(R.id.fragmentContainerB) != null);
-		//  Determine how many panes are visible
+		twoPanes = findViewById(R.id.fragmentContainerB) != null;
+		twoFrags = fragmentManager.findFragmentByTag("frag2") != null;
+		// Determine how many panes are visible
+		// Added fragment check for memory leak hunting purposes
 
-		fragment = fragmentManager.findFragmentByTag("Container1Tag");
-		// Opted to use tag instead of ID here since we want to check that location not the type
-		if(fragment == null) {
+		if(!twoPanes) {
+			// One pane
 			fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.add(R.id.fragmentContainerA, new ListFragment(), "Container1Tag");
+			fragmentTransaction.replace(R.id.fragmentContainerA, new ListFragment(), "frag1");
 			fragmentTransaction.commit();
 			//  Load this fragment by default
-			Log.d("cExceptionF2 - MA- oc", "New listfrag added.");
+			Toast.makeText(this, "Single pane fragment added.", Toast.LENGTH_SHORT).show();
 		}
 		else {
-			Log.d("cExceptionF2 - MA- oc", "Fragment1 exists. ID = " + fragment.getId());
-		}
-
-		fragment = fragmentManager.findFragmentByTag("Container2Tag");
-
-		if(twoPanes && (fragment == null)) {
 			fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.add(R.id.fragmentContainerB, new TickerFragment(),
-									"Container2Tag").commit();
-			Log.d("cExceptionF2 - MA - oc", "New fragment 2 added");
+			fragmentTransaction.replace(R.id.fragmentContainerA, new ListFragment(), "frag1");
+			fragmentTransaction.replace(R.id.fragmentContainerB, new TickerFragment(), "frag2");
+			fragmentTransaction.commit();
+			//  Load two default side by side fragments
+			Toast.makeText(this, "Two panes detected, second fragment added.", Toast.LENGTH_SHORT)
+					.show();
 		}
-		else if(!twoPanes && (fragment != null)) {
-			fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.detach(fragment);
-			Log.d("cExceptionF2 - MA - oc", "Fragment 2 detached");
-		}
-		else {
-			Log.d("cExceptionF2 - MA - oc", "No change.");
-		}
-		// Add second fragment if twoPanes, use TickerFragment by default as per prompt
 
 	}
 
@@ -106,8 +92,6 @@ public class MainActivity extends Activity implements
 		d("json passed to onJsonReceived MainActivity method = " + currentJsonString);
 	}
 
-	// In each case, we have to find out the orientation and whether or not the fragment already
-	// exists in memory
 	@Override
 	public void onListFragOptionSelected(int position) {
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -115,13 +99,14 @@ public class MainActivity extends Activity implements
 			case 0:
 				if(!twoPanes) {
 					fragmentTransaction.replace(R.id.fragmentContainerA,
-							TickerFragment.newInstance()).addToBackStack(null)
+							new TickerFragment()).addToBackStack(null)
 							.commit();
 				}
 				else {
 					fragmentTransaction.replace(R.id.fragmentContainerB,
-							TickerFragment.newInstance()).commit();
+												new TickerFragment()).commit();
 				}
+
 				break;
 			case 1:
 				if(!twoPanes) {
