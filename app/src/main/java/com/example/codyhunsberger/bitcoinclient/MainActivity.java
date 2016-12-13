@@ -15,57 +15,44 @@ public class MainActivity extends Activity implements
 		UrlToJsonString.onJsonReceivedListener {
 	// class can implement several listeners separated with commas
 
-	boolean twoPanes, twoFrags;
+	boolean twoPanes;
 	String currentJsonString;
 	ArrayList<String> savedWallets = new ArrayList<>();
-	FragmentManager fragmentManager = getFragmentManager();
-
+	FragmentManager fragmentManager;
+	FragmentTransaction fragmentTransaction;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		FragmentTransaction fragmentTransaction;
 		twoPanes = findViewById(R.id.fragmentContainerB) != null;
-		twoFrags = fragmentManager.findFragmentByTag("frag2") != null;
-		// Determine how many panes are visible
-		// Added fragment check for memory leak hunting purposes
+		fragmentManager = getFragmentManager();
 
-		if(!twoPanes) {
-			// One pane
+		if (!twoPanes) {
 			fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.replace(R.id.fragmentContainerA, new ListFragment(), "frag1");
 			fragmentTransaction.commit();
-			//  Load this fragment by default
-			Toast.makeText(this, "Single pane fragment added.", Toast.LENGTH_SHORT).show();
 		}
-		else {
-			fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.replace(R.id.fragmentContainerA, new ListFragment(), "frag1");
-			fragmentTransaction.replace(R.id.fragmentContainerB, new TickerFragment(), "frag2");
-			fragmentTransaction.commit();
-			//  Load two default side by side fragments
-			Toast.makeText(this, "Two panes detected, second fragment added.", Toast.LENGTH_SHORT)
-					.show();
-		}
-
 	}
 
 	// Listener fired when valid wallet address is sent from WalletFragment
-	public void onEnterWallet(String walletAddress) {
+	public void onEnterWallet(String walletAddress, boolean add) {
 		String fullWalletApiUrl;
 		WalletFragment wf;
 		boolean walletExists = false;
 
-		d("onEnterWallet received wallet address: " + walletAddress);
+		d("onEnterWallet received wallet address: " + walletAddress + "\nisAdding = " + add);
 
 		for(String w : savedWallets) {
 			if(w.equals(walletAddress)) {
 				walletExists = true;
+				break;
 			}
-			break;
 		}
-		if(!walletExists) {
+		if(!walletExists && add) {
 			savedWallets.add(walletAddress);
+		}
+		else if (walletExists && !add) {
+			savedWallets.remove(savedWallets.indexOf(walletAddress));
 		}
 
 		fullWalletApiUrl = getResources().getString(R.string.wallet_api_url, walletAddress);

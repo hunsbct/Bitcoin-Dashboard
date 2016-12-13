@@ -28,8 +28,6 @@
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Aktuellen Marktwert </string>
-    <string name="last_updated">Zuletzt aktualisiert am %1$s GMT</string>
-    <string name="value_sources">Durch blockr.io API und BTC-e Handelsdaten</string>
 
 
     <!-- Chart Fragment -->

@@ -29,10 +29,7 @@
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Current Market Value</string>
-    <string name="last_updated">Price Last Updated on %1$s GMT</string>
-    <string name="last_download">Device Last Received Update %1$s</string>
-    <!-- remove -->
-    <string name="value_sources">via blockr.io API and BTC-e trade data</string>
+    <string name="ticker_footer">Price Last Updated on %1$s GMT via blockr.io API and BTC-e trade data</string>
     <string name="ticker_api_url">http://btc.blockr.io/api/v1/coin/info</string>
 
 
@@ -41,6 +38,7 @@
     <string name="radio_button_1d">1 Day</string>
     <string name="radio_button_5d">5 Days</string>
     <string name="chart_refresh_timer_text">Auto Reload in %1$ss</string>
+    <string name="chart_url_base">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=%1$s</string>
 
     <!-- Block Fragment -->
     <string name="blockchain_description">View information about specific block:</string>

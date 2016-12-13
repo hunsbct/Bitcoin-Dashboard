@@ -12,15 +12,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2"
+        android:layout_weight="0.35"
         android:text="@string/current_value_text"
         android:id="@+id/currentValueTextViewDescription"
         android:layout_gravity="center_horizontal|top"
         android:singleLine="true"
         android:textAlignment="center"
-        android:gravity="bottom"
         android:paddingBottom="15dp"
-        android:textSize="25sp"/>
+        android:textSize="30sp"
+        android:gravity="center"/>
     <!-- todo make more visually appealing -->
 
     <TextView
@@ -34,21 +34,6 @@
         android:textStyle="bold"
         android:gravity="center_vertical|end" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"
-        android:text="@string/last_updated"
-        android:id="@+id/currentValueTextViewTimestamp"
-        android:gravity="bottom|end" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"
-        android:text="@string/value_sources"
-        android:id="@+id/currentValueTextViewSources"
-        android:gravity="end|top" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -56,7 +41,17 @@
         android:text="@string/refresh_button"
         android:id="@+id/currentValueRefreshButton"
         android:background="@drawable/button_select"
-        android:layout_gravity="center_horizontal"/>
+        android:elevation="0sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="@string/ticker_footer"
+        android:id="@+id/currentValueTextViewSources"
+        android:gravity="bottom|top"
+        android:textSize="10sp"
+        android:textAlignment="textStart"/>
 
 </LinearLayout>
 

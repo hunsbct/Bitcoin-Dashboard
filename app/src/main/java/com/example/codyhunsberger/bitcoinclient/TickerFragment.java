@@ -36,7 +36,7 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
         String apiUrl = getResources().getString(R.string.ticker_api_url);
 
         valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice);
-        timestampTV = (TextView) v.findViewById(R.id.currentValueTextViewTimestamp);
+        timestampTV = (TextView) v.findViewById(R.id.currentValueTextViewSources);
         Log.d("pathtrace", "Step 1. url = " + apiUrl);
 
         Log.d("pathtrace", "Step 1a. jsonstring before null check = " + jsonString);
@@ -47,7 +47,7 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
 
         Log.d("pathtrace", "Step 1c. timestamp = " + timestamp);
         Log.d("pathtrace", "Step 1c. valueFormatted = " + valueFormatted);
-        timestampText = getResources().getString(R.string.last_updated, timestamp);
+        timestampText = getResources().getString(R.string.ticker_footer, timestamp);
         Log.d("pathtrace", "Step 1c. timestampText = " + timestampText);
         timestampTV.setText(timestampText);
         valueTV.setText(valueFormatted);
@@ -58,7 +58,7 @@ public class TickerFragment extends Fragment implements UrlToJsonString.onJsonRe
             @Override
             public void onClick(View view) {
                 updateJsonString();
-                timestampText = getResources().getString(R.string.last_updated, timestamp);
+                timestampText = getResources().getString(R.string.ticker_footer, timestamp);
                 timestampTV.setText(timestampText);
                 valueTV.setText(valueFormatted);
             }

@@ -21,7 +21,7 @@ public class ChartFragment extends Fragment {
 	String chartUrl, chartRefreshTimerText;
 	WebView cwv;
 	int secondsUntilFinished;
-	CountDownTimer cdt;
+	Timer timer;
 	TextView timerText;
 
 	public ChartFragment() {
@@ -44,10 +44,7 @@ public class ChartFragment extends Fragment {
 		cwv.getSettings().setUseWideViewPort(true);
 		cwv.getSettings().setLoadWithOverviewMode(true);
 
-
-
-		chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1d";
-
+		chartUrl = getResources().getString(R.string.chart_url_base, "1d");
 		displayUrl(chartUrl);
 
 		rg.setOnCheckedChangeListener(
@@ -56,42 +53,49 @@ public class ChartFragment extends Fragment {
 				public void onCheckedChanged(RadioGroup group, int checkedId) {
 					switch (checkedId) {
 						case(R.id.radioButton1d):
-							chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1d";
+							chartUrl = getResources().getString(R.string.chart_url_base, "1d");
 							break;
 						case(R.id.radioButton5d):
-							chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=5d";
+							chartUrl = getResources().getString(R.string.chart_url_base, "5d");
 							break;
 						default:
-							chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1Y";
+							chartUrl = getResources().getString(R.string.chart_url_base, "1Y");
 							Toast.makeText(getActivity(), "Error in RadioGroup onCheckedChanged " +
 												   "listener. ID received does not match either button.",
 										   Toast.LENGTH_SHORT).show();
-						// I'm fairly certain this can't happen but you can't be too sure
+						// note I'm fairly certain this can't happen but you can't be too sure
 					}
-					displayUrl(chartUrl);
+					chartReloader(chartUrl);
 				}
 		});
 		return v;
 	}
 
+	public void chartReloader(String chartUrl) {
+		displayUrl(chartUrl);
+		timer = new Timer(60000, 1000);
+		timer.start();
+	}
+
 	// Reloads the chart every minute. The prompt suggested 15s but that seems unnecessary.
 	// Chart source does not update anywhere close to this frequency so it doesn't do too much, but
 	// it's in the requirements.
-	public void newTimer() {
-		cdt = new CountDownTimer(60000, 1000) {
-			public void onFinish() {
-				displayUrl(chartUrl);
-				start();
-			}
+	class Timer extends CountDownTimer {
+		public Timer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
 
-			public void onTick(long millisUntilFinished) {
-				secondsUntilFinished = safeLongToInt(millisUntilFinished / 1000);
-				chartRefreshTimerText = getResources().getString(
-						R.string.chart_refresh_timer_text, secondsUntilFinished);
-				timerText.setText(chartRefreshTimerText);
-				// todo progress bar for reload?
-			}
-		}.start();
+		public void onFinish() {
+			chartReloader(chartUrl);
+		}
+
+		public void onTick(long millisUntilFinished) {
+			secondsUntilFinished = safeLongToInt(millisUntilFinished / 1000);
+			chartRefreshTimerText = getResources().getString(
+					R.string.chart_refresh_timer_text, secondsUntilFinished);
+			timerText.setText(chartRefreshTimerText);
+			// todo progress bar for reload?
+		}
 	}
 
 	// Load a fresh chart URL in the webview
@@ -100,7 +104,6 @@ public class ChartFragment extends Fragment {
 			Toast.makeText(getActivity(), "Loading...", Toast.LENGTH_SHORT).show();
 			// It's bad design when the Toast outlasts the load time by a factor of 2
 			cwv.loadUrl(chartUrl);
-			newTimer();
 		}
 		else{
 			Toast.makeText(getActivity(), "Unable to load, airplane mode is enabled.", Toast
@@ -119,5 +122,6 @@ public class ChartFragment extends Fragment {
 		return (int) l;
 	}
 }
+
 
 // note: Yahoo chart resource pulls 512x288px PNG

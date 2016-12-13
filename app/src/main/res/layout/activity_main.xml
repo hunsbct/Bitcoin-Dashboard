@@ -19,10 +19,11 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView"
             android:contentDescription="@string/banner_img_content_description"
-            android:src="@mipmap/btc_banner" />
+            android:src="@mipmap/btc_banner"
+            android:padding="4dp"/>
     </FrameLayout>
 
-    <fragment
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:name="android.app.ListFragment"

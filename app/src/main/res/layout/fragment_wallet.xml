@@ -57,7 +57,8 @@
         android:layout_weight="0.1"
         android:text="@string/wallet_button"
         android:background="@drawable/button_select"
-        android:id="@+id/createWalletButton" />
+        android:id="@+id/createWalletButton"
+        android:elevation="0sp" />
 
     <TextView
         android:layout_width="match_parent"
