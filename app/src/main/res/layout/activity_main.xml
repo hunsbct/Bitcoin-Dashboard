@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:weightSum="1.0"
 
-    tools:context="com.example.codyhunsberger.bitcoinclient.MainActivity">
+    tools:context="com.example.codyhunsberger.bitcoindashboard.MainActivity">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -33,5 +33,3 @@
         tools:layout="@layout/fragment_list" />
 
 </LinearLayout>
-
-<!-- fix image sizing -->

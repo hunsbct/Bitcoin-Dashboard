@@ -4,14 +4,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.codyhunsberger.bitcoinclient.ListFragment">
+    tools:context="com.example.codyhunsberger.bitcoindashboard.ListFragment">
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/listview"
-        android:layout_gravity="center_horizontal|top"
-        tools:listitem="@layout/list_rows" />
+        tools:listitem="@layout/list_rows"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
-    <!-- todo set width to match_parent for click listener to work on whole row instead of just text-->
 </LinearLayout>

@@ -37,8 +37,9 @@
     <string name="chart_description">Select a time frame to view Bitcoin\'s value change</string>
     <string name="radio_button_1d">1 Day</string>
     <string name="radio_button_5d">5 Days</string>
-    <string name="chart_refresh_timer_text">Auto Reload in %1$ss</string>
-    <string name="chart_url_base">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=%1$s</string>
+    <string name="chart_timer_text">Auto Update in %1$ss</string>
+    <string name="chart_url_1d">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=1d</string>
+    <string name="chart_url_5d">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=5d</string>
 
     <!-- Block Fragment -->
     <string name="blockchain_description">View information about specific block:</string>
@@ -49,4 +50,4 @@
 
 </resources>
 
-<!-- todo add translation for one language of my choosing -->
+<!-- todo add any missing German strings -->
