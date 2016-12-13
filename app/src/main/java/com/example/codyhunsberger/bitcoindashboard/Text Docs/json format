@@ -1,0 +1,91 @@
+Address
+
+{
+    "status":"success",
+    "data":{
+        "address":"198aMn6ZYAczwrE5NvNTUMyJ5qkfy4g3Hi",
+        "is_unknown":false,
+        "balance":8000.00236957,
+        "balance_multisig":0,
+        "totalreceived":8000.00236957,
+        "nb_txs":33,
+        "first_tx":{
+            "time_utc":"2009-02-22T10:50:53Z",
+            "tx":"0f0fbcc18fd0d090ad3402574df8404cec1176bc000f9aa0dc19f8d832ff94db",
+            "block_nb":"5219",
+            "value":400,
+            "confirmations":437590
+        },
+        "last_tx":{
+            "time_utc":"2016-08-11T16:33:24Z",
+            "tx":"c653ac1e7a66117e097dd16cfd122b24b0f92060d096d8754a1e550d4c64f520",
+            "block_nb":"424718",
+            "value":0.0002,
+            "confirmations":18091
+        },
+        "is_valid":true
+    },
+"code":200,
+"message":""
+}
+
+Ticker
+
+{
+    "status":"success",
+    "data": {
+        "coin": {
+            "name":"Bitcoin",
+            "abbr":"BTC",
+            "logo":"",
+            "homepage":""
+        },
+        "volume": {
+            "current":16032062.5,
+            "all":21000000,
+            "perc":76.34
+        },
+        "markets": {
+            "btce":{
+                "name":"BTC-e",
+                "last_update_utc":"2016-12-08T21:30:01Z",
+                "value":763.329,
+                "currency":"USD",
+                "daily_change": {
+                    "value":"760.90000000",
+                    "perc":0.31999999999999,
+                    "diff":2.429
+                }
+            },
+            "coinbase": {
+                "name":"Coinbase",
+                "last_update_utc":"2016-12-08T21:30:02Z",
+                "value":770.57,
+                "currency":"USD",
+                "daily_change": {
+                    "value":"767.97000000",
+                    "perc":0.34,"diff":2.6
+                }
+            }
+        },
+        "last_block": {
+            "nb":442569,
+            "time_utc":"2016-12-08T21:33:19Z",
+            "nb_txs":2492,
+            "fee":"0.63908161",
+            "difficulty":"286765766820.550000000000000"
+        },
+        "next_difficulty": {
+            "difficulty":312694982872.96,
+            "retarget_in":951,
+            "retarget_block":443520,
+            "perc":9.0419495813233
+        },
+        "websocket": {
+            "ws_url":"ws:\/\/btc.blockr.io:9081",
+            "wss_url":"wss:\/\/btc.blockr.io:8081"
+        }
+    },
+    "code":200,
+    "message":""
+}

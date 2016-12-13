@@ -1,0 +1,22 @@
+A. MISSING CORE PROMPT REQUIREMENTS
+> 1. Block Fragment (requires item B2)
+
+B. BROKEN CORE PROMPT REQUIREMENTS
+> 2. JSON Data display in Wallet Fragment
+> 3. Memory leak/loading thing
+> 4. Chart Fragment leaks like a faucet, timer starts going nuts after a few minutes
+> 5. Reuse fragments
+> Make sure there are no string literals in your code.
+
+C. MOST APP IMPROVEMENT PER TIME COST
+> 1. Layout tweaking
+    > 1a. Button in Ticker/Auto Refresh (requires item B1)
+> Add taskbar
+
+D. LESS IMPORTANT
+> 2. Have daily change rates in BTC prices in ticker
+
+E. LEAST IMPORTANT (Purely Costmetic)
+> 1. Browse IDE warnings and modify accordingly
+> 2. Resize chart view to fit image (512x288)
+    > Use ImageView instead of WebView?

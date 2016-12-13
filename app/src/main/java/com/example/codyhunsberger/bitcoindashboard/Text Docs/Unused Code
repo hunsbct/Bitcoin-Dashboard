@@ -1,0 +1,160 @@
+    // Class: MainActivity
+    // Description: interface listener that received the saved wallets list for some reason.
+
+    public void onEnterWallet(String walletAddress, ArrayList<String> savedWallets) {
+        walletDataSetChanged = false;
+        this.savedWallets = savedWallets;
+        boolean walletExists = false;
+        for(String w : savedWallets) {
+            if (w.equals(walletAddress)) {
+                walletExists = true;
+            }
+            break;
+        }
+        if (!walletExists) {
+            savedWallets.add(walletAddress);
+            walletDataSetChanged = true;
+        }
+        Toast.makeText(this, walletAddress + " added = " + !walletExists + "\n Saved Wallets - " +
+                savedWallets.size(), Toast.LENGTH_LONG).show();
+    }
+
+    // Class: WalletFragment
+    // Description: Constructor that also takes boolean for change in data state.
+    // Unnecessary because the adapter is redrawn each time.
+
+    public static WalletFragment newInstance(ArrayList<String> wallets, String json, boolean listDataChanged) {
+            WalletFragment fragment = new WalletFragment();
+            Bundle args = new Bundle();
+            args.putStringArrayList("savedWallets", wallets);
+            args.putString("jsonString", json);
+            args.putBoolean("listDataChanged", listDataChanged);
+            fragment.setArguments(args);
+            return fragment;
+    }
+
+    // Class: ChartFragment
+    // Description: Used to auto-reload chart in 15s intervals.
+    // Probably a little less efficient than its replacement, CountDownTimer, but oh well
+
+    final Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+            chartRefreshTimerText = getResources().getString(
+                    R.string.chart_refresh_timer_text, autoReloadDelay);
+            timerText.setText(chartRefreshTimerText);
+            autoReloadDelay--;
+            if (autoReloadDelay == 0) {
+                loadUrl(enteredUrl);
+            }
+        }
+    }, 15000);
+
+    // Class: fragment_chart
+    // Description: Spinner if there are more than two chart options. Seems dumb for so few.
+
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:id="@+id/chart_spinner"
+            android:entries="@array/chart_spinner_array"
+            android:prompt="@string/chart_spinner_prompt" />
+
+    // And the String array resource
+
+
+    <string-array name="chart_spinner_array">
+        <item>1 Day</item>
+        <item>5 Days</item>
+        <item>1 Month</item>
+        <item>6 Months</item>
+        <item>1 Year</item>
+        <item>2 Years</item>
+    </string-array>
+
+    // Class: ChartFragment
+    // Description: Button OCL for pulling spinner selection
+
+     Button button = (Button) v.findViewById(R.id.chart_spinner_button);
+             View.OnClickListener ocl = new View.OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                     String selectedTime = spinner.getItemAtPosition(spinner.getSelectedItemPosition()).toString();
+
+                     switch (selectedTime) {
+                         case "1 Day":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1d";
+                             break;
+                         case "5 Days":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=5d";
+                             break;
+                         case "1 Month":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1M";
+                             break;
+                         case "6 Months":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=6M";
+                             break;
+                         case "1 Year":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1Y";
+                             break;
+                         case "2 Years":
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=2Y";
+                             break;
+                         default:
+                             chartUrl = "https://chart.yahoo.com/z?s=BTCUSD=X&t=1d";
+                             break;
+                     }
+
+     				if (!isAirplaneModeOn(getActivity())) {
+     					loadUrl(chartUrl);
+     					newTimer();
+     				}
+     				else {
+     					Toast.makeText(getActivity(), "Unable to load, airplane mode is enabled.", Toast
+     							.LENGTH_SHORT).show();
+     				}
+                 }
+             };
+             button.setOnClickListener(ocl);
+
+    // Class: ChartFragment
+    // Description: setWebViewClient method for cwv to display loading graphics
+
+    loadingFinished = true;
+    redirect = false;
+
+    cwv.setWebViewClient(new WebViewClient() {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView wv, String enteredUrl) {
+            if (!loadingFinished) {
+                redirect = true;
+            }
+
+            loadingFinished = false;
+            wv.loadUrl(enteredUrl);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(
+                WebView wv, String enteredUrl, Bitmap favicon) {
+            super.onPageStarted(wv, enteredUrl, favicon);
+            loadingFinished = false;
+            //SHOW LOADING IF IT ISNT ALREADY VISIBLE
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if(!redirect){
+                loadingFinished = true;
+            }
+
+            if(loadingFinished && !redirect){
+                //HIDE LOADING IT HAS FINISHED
+            } else{
+                redirect = false;
+            }
+        }
+    });
