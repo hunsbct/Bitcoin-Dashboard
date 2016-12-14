@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,46 +18,31 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-// Add new form for entering wallet?
 public class WalletFragment extends Fragment {
 	ArrayList<String> savedWallets = new ArrayList<>();
 	ArrayAdapter<String> listAdapter;
-	double balanceDouble;
 	String walletAddress, walletAddressFormatted = "", walletBalanceFormatted = "", jsonString,
 			balance = "", isUnknown = "";
 	JSONObject jsonObj, data;
 	TextView addressTV, balanceTV;
-	DecimalFormat df = new DecimalFormat("#.###");
-	// todo set df to desired final format
 	private WalletListUpdateListener listener;
 
 	public interface WalletListUpdateListener {
 		void onEnterWallet(String walletAddress, boolean isAdding);
 	}
 
-
 	public WalletFragment() {
-		// Required empty public constructor
-	}
 
-	public static WalletFragment newInstance(ArrayList<String> wallets) {
-		WalletFragment fragment = new WalletFragment();
-		Bundle args = new Bundle();
-		args.putStringArrayList("savedWallets", wallets);
-		args.putString("jsonString", null);
-		fragment.setArguments(args);
-		return fragment;
 	}
 
 	public static WalletFragment newInstance(ArrayList<String> wallets, String json) {
 		WalletFragment fragment = new WalletFragment();
 		Bundle args = new Bundle();
 		args.putStringArrayList("savedWallets", wallets);
-		args.putString("jsonString", json);
+		args.putString("json", json);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -73,45 +57,26 @@ public class WalletFragment extends Fragment {
 		Button button = (Button) v.findViewById(R.id.createWalletButton);
 		addressTV = (TextView) v.findViewById(R.id.walletAddresstextView);
 		balanceTV = (TextView) v.findViewById(R.id.walletBalanceTextView);
-		jsonString = "";
-		walletAddressFormatted = "";
-		walletBalanceFormatted = "";
 
-		try {
-			savedWallets = getArguments().getStringArrayList("savedWallets");
-		}
-		catch(Exception e) {
-			Log.d("cExceptionWallets", e.toString());
-			Toast.makeText(getActivity(), "WF has no wallet list arg yet",
-						   Toast.LENGTH_SHORT).show();
-		}
-
-		jsonString = getArguments().getString("jsonString");
-
-		if (jsonString == null) {
-
-		}
+		savedWallets = getArguments().getStringArrayList("savedWallets");
+		jsonString = getArguments().getString("json");
 
 		// If jsonString arg is null
-		if(isNullOrEmpty(jsonString)) {
-			// If jsonString is null but there's a wallet we can use as a placeholder
+		if(jsonString == null) {
+			// If no json and some wallets
 			if((savedWallets != null) && (savedWallets.size() > 0)) {
 				walletAddress = savedWallets.get(0);
-				walletEditText.setText(walletAddress);
-				// todo check if this is top or bottom of displayed list
+				listener.onEnterWallet(walletAddress, false);
 			}
-			else {
-				Toast.makeText(getActivity(), "WF has no json or wallet list args yet", Toast
-						.LENGTH_SHORT).show();
-			}
+			// If no json and no wallets
 		}
 		else {
-			jsonString = getArguments().getString("jsonString");
-			Log.d("cException-WF-ocv", "jsonString pulled from bundle = " + jsonString);
-
 			setVariablesFromJson(jsonString);
 			// Sets values of data, isUnknown, balance, balanceDouble, walletAddressFormatted,
 			// and walletBalanceFormatted
+
+			addressTV.setText(walletAddressFormatted);
+			balanceTV.setText(walletBalanceFormatted);
 		}
 
 		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_rows, savedWallets);
@@ -143,11 +108,9 @@ public class WalletFragment extends Fragment {
 				hideKeyboard(getActivity(), view);
 				// Hides keyboard on button press
 				walletAddress = walletEditText.getText().toString();
-				Log.d("cException-WF-ocv-oc", "walletAddress set to = " + walletAddress +
-						"at button ocl");
 				if(walletAddressEntryStructuralValidation(walletAddress)) {
 					listener.onEnterWallet(walletAddress, true);
-					// Pass true if adding wallet, false to remove
+					// Pass true if adding wallet, false to delete from list
 				}
 				else {
 					Toast.makeText(getActivity(), "Please enter a valid wallet address\n" +
@@ -157,61 +120,34 @@ public class WalletFragment extends Fragment {
 				}
 			}
 		});
-
-		if(!isNullOrEmpty(walletBalanceFormatted) && !isNullOrEmpty(walletAddressFormatted)) {
-			addressTV.setText(walletAddressFormatted);
-			balanceTV.setText(walletBalanceFormatted);
-		}
-		else {
-			Log.d("cException-WF-ocv", "wbFormatted or waFormatted are null or empty");
-		}
-
 		return v;
-	}
-
-	// Update fragment without creating new instance
-	public void update(String newJsonString) {
-		setVariablesFromJson(newJsonString);
-		addressTV.setText(walletAddressFormatted);
-		balanceTV.setText(walletBalanceFormatted);
-		Toast.makeText(getActivity(), "Wallet update method complete", Toast.LENGTH_SHORT).show();
 	}
 
 	// Sets values of data, receivedWalletAddress, isUnknown, balance, balanceDouble,
 	// walletAddressFormatted, and walletBalanceFormatted
 	public void setVariablesFromJson(String jsonString) {
+		DecimalFormat df = new DecimalFormat("0.000");
 		try {
 			jsonObj = new JSONObject(jsonString);
 			data = new JSONObject(jsonObj.getString("data"));
-			walletAddress = jsonObj.getString("address");
-			isUnknown = jsonObj.getString("is_unknown");
+			walletAddress = data.getString("address");
+			isUnknown = data.getString("is_unknown");
 			// The JSON also passes an item called "is_valid", not sure the difference yet
-
-			Log.d("cException-WF-gifj", "data = " + data);
-			Log.d("cException-WF-gifj", "isUnknown = " + isUnknown);
-			Log.d("cException-WF-gifj", "received walletAddress = " + walletAddress);
 
 			if(isUnknown.equals("false")) {
 				try {
 					balance = data.getString("balance");
-					balanceDouble = Double.parseDouble(balance);
-					df.setRoundingMode(RoundingMode.CEILING);
+					Double balanceDouble = Double.parseDouble(balance);
 
-					walletAddressFormatted = getResources().getString(R.string.wallet_address,
-																	  walletAddress);
-					walletBalanceFormatted = getResources().getString(R.string.wallet_balance,
-																	  df.format(balanceDouble));
-
-					Log.d("cException-WF-gifj", "balance = " + balance);
-					Log.d("cException-WF-gifj", "walletAddressFormatted = " + walletAddressFormatted);
-					Log.d("cException-WF-gifj", "walletBalanceFormatted = " + walletAddressFormatted);
-
-					Log.d("cException-WF-gifj", "Wallet is valid");
-					// remove
+					walletBalanceFormatted = df.format(balance);
 				}
 				catch(Exception e) {
-					Log.d("cExceptionWF", e.toString());
+					e.printStackTrace();
 				}
+				walletAddressFormatted = getResources().getString(R.string.wallet_address,
+																   walletAddress);
+				walletBalanceFormatted = getResources().getString(R.string.wallet_balance,
+																  balance);
 			}
 			else {
 				Toast.makeText(getActivity(), "Wallet address not found by API, please double " +
@@ -219,26 +155,8 @@ public class WalletFragment extends Fragment {
 			}
 		}
 		catch(Exception e) {
-			Log.d("cException-WF-gifj", e.toString());
+			e.printStackTrace();
 		}
-	}
-
-	// Returns true only if s is not null and has nonzero length
-	public boolean isNullOrEmpty(String s) {
-		boolean result;
-		if(s == null) {
-			Log.d("json", "jsonString pulled from bundle in WF is null");
-			result = false;
-		}
-		else if(s.length() < 1) {
-			Log.d("json", "jsonString pulled from bundle in WF is length 0");
-			result = false;
-		}
-		else {
-			Log.d("json", "jsonString length is " + jsonString.length());
-			result = true;
-		}
-		return result;
 	}
 
 	@Override
@@ -273,5 +191,3 @@ public class WalletFragment extends Fragment {
 		// Wallet addresses are 26-35 alphanumeric characters and begin with 1 or 3
 	}
 }
-
-// Wallet balance URL: http://btc.blockr.io/api/v1/address/balance/[wallet address]

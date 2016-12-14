@@ -4,25 +4,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.webkit.URLUtil;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 
 public class MainActivity extends Activity implements
+		TickerFragment.RefreshListener,
 		ListFragment.ListSelectionListener,
-		WalletFragment.WalletListUpdateListener,
-		UrlToJsonString.onJsonReceivedListener{
+		WalletFragment.WalletListUpdateListener {
 	// class can implement several listeners separated with commas
 
 	boolean twoPanes;
-	String jsonString;
-	FragmentManager fm;
+	String jsonString, tickerJsonString, walletJsonString;
+	FragmentManager fm = getFragmentManager();
 	FragmentTransaction ft;
-
 	String tickerApiUrl, walletApiUrl;
 
 	ArrayList<String> savedWallets = new ArrayList<>();
@@ -32,26 +34,28 @@ public class MainActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 		tickerApiUrl = getResources().getString(R.string.ticker_api_url);
 		walletApiUrl = getResources().getString(R.string.wallet_api_url);
-		twoPanes = findViewById(R.id.fragmentContainerB) != null;
-		fm = getFragmentManager();
 
-		if (savedInstanceState == null) {
-			if(!twoPanes) {
-				ft = fm.beginTransaction();
-				ft.add(R.id.fragmentContainerA, new ListFragment());
-				ft.commit();
-				Toast.makeText(this, "new listfrag added", Toast.LENGTH_SHORT).show();
-			}
-			else {
-				ft = fm.beginTransaction();
-				ft.add(R.id.fragmentContainerB, new TickerFragment());
-				ft.commit();
-				// Only adding the second here, since in twoPane mode the list is static
-			}
-			// todo replace b with existing fragment not default ticker
+		twoPanes = findViewById(R.id.fragmentContainerB) != null;
+
+		setJsonString(tickerApiUrl);
+		tickerJsonString = jsonString;
+
+		if(!twoPanes) {
+			ft = fm.beginTransaction();
+			ft.replace(R.id.fragmentContainerA, new ListFragment());
+			ft.commit();
 		}
+		else {
+			ft = fm.beginTransaction();
+			ft.replace(R.id.fragmentContainerB, TickerFragment.newInstance(tickerJsonString));
+			ft.commit();
+			// Only adding the second here, since in twoPane mode the list is static
+		}
+		// todo replace b with existing fragment not
+
 	}
 
 
@@ -62,13 +66,13 @@ public class MainActivity extends Activity implements
 			case 0:
 				if(!twoPanes) {
 					ft.replace(R.id.fragmentContainerA,
-												new TickerFragment()).addToBackStack(null).commit();
+							   TickerFragment.newInstance(tickerJsonString))
+							.addToBackStack(null).commit();
 				}
 				else {
-					ft.replace(R.id.fragmentContainerB,
-												new TickerFragment()).commit();
+					ft.replace(R.id.fragmentContainerB, TickerFragment.newInstance(tickerJsonString))
+							.commit();
 				}
-
 				break;
 			case 1:
 				if(!twoPanes) {
@@ -83,35 +87,20 @@ public class MainActivity extends Activity implements
 				break;
 			case 2:
 				if(!twoPanes) {
-					ft.replace(R.id.fragmentContainerA, new BlockFragment())
-							.addToBackStack(null)
-							.commit();
+					ft.replace(R.id.fragmentContainerA, WalletFragment.newInstance
+							(savedWallets, walletJsonString)).addToBackStack(null).commit();
 				}
 				else {
-					ft.replace(R.id.fragmentContainerB, new BlockFragment())
-							.commit();
+					ft.replace(R.id.fragmentContainerB, WalletFragment.newInstance
+							(savedWallets, walletJsonString)).commit();
 				}
 				break;
-			case 3:
-				if(!twoPanes) {
-					ft.replace(R.id.fragmentContainerA, WalletFragment.newInstance(savedWallets))
-							.addToBackStack(null)
-							.commit();
-				}
-				else {
-					ft.replace(R.id.fragmentContainerB, WalletFragment.newInstance(savedWallets))
-							.commit();
-				}
-				break;
-			default:
-				Toast.makeText(this, "Broken onListFragOptionSelected", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	// Boolean indicates whether it was a button press or a long press
 	public void onEnterWallet(String walletAddress, boolean calledByButton) {
 		String fullWalletApiUrl;
-		WalletFragment wf;
 		boolean walletExists = false;
 
 		for(String w : savedWallets) {
@@ -120,35 +109,88 @@ public class MainActivity extends Activity implements
 				break;
 			}
 		}
+
+		// If wallet was entered
 		if(!walletExists && calledByButton) {
 			savedWallets.add(walletAddress);
 		}
+		// If wallet was long-clicked
 		else if (walletExists && !calledByButton) {
 			savedWallets.remove(savedWallets.indexOf(walletAddress));
 		}
 
 		fullWalletApiUrl = getResources().getString(R.string.wallet_api_url, walletAddress);
-		urlToJsonString(fullWalletApiUrl);
+		setJsonString(fullWalletApiUrl);
+		walletJsonString = jsonString;
+		onListFragOptionSelected(2);
 
 	}
 
-	public void urlToJsonString(String url) {
-		if (URLUtil.isValidUrl(url)) {
-			UrlToJsonString urlToJsonString = new UrlToJsonString(this);
-			urlToJsonString.execute(url);
-		}
-		else {
-			Log.d("json", "URL passed to urlToJsonString is invalid.");
-		}
+	public void onRefresh() {
+		setJsonString(getResources().getString(R.string.ticker_api_url));
+		onListFragOptionSelected(0);
 	}
 
-	public void onJsonReceived(String json) {
-		Log.d("json", "json received from async listener = " + json);
-		jsonString = json;
+	public void setJsonString(String url) {
+		UrlToJsonString urlToJsonString = new UrlToJsonString();
+		urlToJsonString.execute(url);
 
+		while (urlToJsonString.isLocked()) {
+			try {
+				Thread.sleep(10);
+			}
+			catch (Exception e) {
+
+			}
+		}
+
+	}
+
+	class UrlToJsonString extends AsyncTask<String, Void, Void> {
+		public boolean locked;
+
+		public boolean isLocked() {
+			return locked;
+		}
+
+		protected void onPreExecute() {
+			locked = true;
+		}
+
+		protected Void doInBackground(String... urlString) {
+			StringBuilder sb = new StringBuilder();
+			URLConnection urlConn;
+			InputStreamReader in = null;
+			try {
+				URL url = new URL(urlString[0]);
+				urlConn = url.openConnection();
+				if (urlConn != null)
+					urlConn.setReadTimeout(60 * 1000);
+				if (urlConn != null && urlConn.getInputStream() != null) {
+					in = new InputStreamReader(urlConn.getInputStream(),
+											   Charset.defaultCharset());
+					BufferedReader bufferedReader = new BufferedReader(in);
+					int cp;
+					while ((cp = bufferedReader.read()) != -1) {
+						sb.append((char) cp);
+					}
+					bufferedReader.close();
+				}
+				if (in != null) {
+					in.close();
+				}
+				else {
+				}
+			}
+			catch (Exception e) {
+				throw new RuntimeException("Exception while calling URL:" + urlString[0], e);
+			}
+
+			String result = sb.toString();
+			jsonString = result;
+			locked = false;
+			return null;
+		}
+		// Would have set locked = false in onPostExecute but I can't get it to call that method
 	}
 }
-
-// todo rename to bitcoin dashboard
-
-// note Shift + Command + 8 toggles column/Insert mode

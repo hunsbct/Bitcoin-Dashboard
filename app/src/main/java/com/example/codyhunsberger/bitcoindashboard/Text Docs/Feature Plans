@@ -1,3 +1,10 @@
+Features and functions I would like to implement moving forward (will continue to work on this app)
+
+Block Viewer
+QR Reader
+Splash Screen
+Hamburger Menu
+
 Ticker Functionality
     -Display from more than one source
 
@@ -7,7 +14,5 @@ Wallet Functionality
 -Separate wallet entry form
 
 Chart Functionality
--Display loading prgress
+-Display loading progress
 
-QR Reader
-Splash Screen

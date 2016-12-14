@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1.0"
     android:id="@+id/fragment_ticker"
     tools:context=".TickerFragment"
     android:padding="10dp">
@@ -12,21 +11,21 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.35"
+        android:layout_weight="0.2"
         android:text="@string/current_value_text"
         android:id="@+id/currentValueTextViewDescription"
         android:layout_gravity="center_horizontal|top"
         android:singleLine="true"
         android:textAlignment="center"
         android:paddingBottom="15dp"
-        android:textSize="30sp"
-        android:gravity="center"/>
+        android:textSize="20sp"
+        android:gravity="center|bottom"/>
     <!-- todo make more visually appealing -->
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:textSize="80sp"
+        android:textSize="60sp"
         android:id="@+id/currentValueTextViewPrice"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.5"
@@ -45,13 +44,12 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"
+        android:layout_height="wrap_content"
         android:text="@string/ticker_footer"
         android:id="@+id/currentValueTextViewSources"
-        android:gravity="bottom|top"
-        android:textSize="10sp"
-        android:textAlignment="textStart"/>
+        android:textSize="12sp"
+        android:textAlignment="textStart"
+        android:padding="5sp"/>
 
 </LinearLayout>
 

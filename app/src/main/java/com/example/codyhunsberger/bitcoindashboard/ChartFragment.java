@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChartFragment extends Fragment {
-	String chartUrl1d, chartUrl5d;
+	String chartUrl1d, chartUrl5d, activeUrl;
 	int secondsUntilFinished;
 	Timer timer;
 	TextView timerText;
@@ -38,14 +38,12 @@ public class ChartFragment extends Fragment {
 		chartUrl5d = getResources().getString(R.string.chart_url_5d);
 
 		timerText = (TextView) v.findViewById(R.id.chartRefreshTimerTextview);
-		timerText.setText("");
 		RadioGroup rg = (RadioGroup) v.findViewById(R.id.chart_radio_group);
 		cwv = (WebView) v.findViewById(R.id.chartWebView);
-
 		cwv.getSettings().setUseWideViewPort(true);
 		cwv.getSettings().setLoadWithOverviewMode(true);
 
-		displayUrl(chartUrl1d);
+		chartChange(chartUrl1d);
 
 		rg.setOnCheckedChangeListener(
 			new RadioGroup.OnCheckedChangeListener() {
@@ -53,18 +51,19 @@ public class ChartFragment extends Fragment {
 				public void onCheckedChanged(RadioGroup group, int checkedId) {
 					switch (checkedId) {
 						case(R.id.radioButton1d):
-							chartReloader(chartUrl1d);
+							activeUrl = chartUrl1d;
 							break;
 						case(R.id.radioButton5d):
-							chartReloader(chartUrl5d);
+							activeUrl = chartUrl5d;
 							break;
 					}
+					chartChange(activeUrl);
 				}
 		});
 		return v;
 	}
 
-	public void chartReloader(String url) {
+	public void chartChange(String url) {
 		displayUrl(url);
 		timer = new Timer(60000, 1000, url);
 		timer.start();
@@ -82,8 +81,7 @@ public class ChartFragment extends Fragment {
 		}
 
 		public void onFinish() {
-			chartReloader(url);
-			Log.d("timer", "chart reloader call");
+			chartChange(url);
 		}
 
 		public void onTick(long millisUntilFinished) {
@@ -97,7 +95,6 @@ public class ChartFragment extends Fragment {
 	// Load a current chart URL in the webview
 	public void displayUrl(String chartUrlBase) {
 		if(!isAirplaneModeOn(getActivity())) {
-			Toast.makeText(getActivity(), "Loading...", Toast.LENGTH_SHORT).show();
 			cwv.loadUrl(chartUrlBase);
 		}
 		else{

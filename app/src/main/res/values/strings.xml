@@ -7,10 +7,9 @@
 
     <!-- List Fragment -->
     <string-array name="main_menu_items">
-        <item>Ticker</item>
-        <item>Value History Graph</item>
-        <item>Blockchain Viewing Tool</item>
-        <item>Find Wallet Balance By Address</item>
+        <item>Current Exchange Rate Ticker</item>
+        <item>Value Charts</item>
+        <item>View Wallet Balance</item>
     </string-array>
 
     <!-- Shared -->
@@ -22,24 +21,24 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">View Wallet Data</string>
-    <string name="wallet_address">Balance For Address [%1$s]</string>
+    <string name="wallet_address">Balance For Address %1$s</string>
     <string name="wallet_balance">%1$s BTC</string>
-    <string name="wallet_api_url">http://btc.blockr.io/api/v1/address/info/%1$s</string>
+    <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/%1$s</string>
     <string name="long_click_desc">Long-press a saved address to remove.</string>
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Current Market Value</string>
     <string name="ticker_footer">Price Last Updated on %1$s GMT via blockr.io API and BTC-e trade data</string>
-    <string name="ticker_api_url">http://btc.blockr.io/api/v1/coin/info</string>
+    <string name="ticker_api_url" translatable="false">http://btc.blockr.io/api/v1/coin/info</string>
 
 
     <!-- Chart Fragment -->
     <string name="chart_description">Select a time frame to view Bitcoin\'s value change</string>
     <string name="radio_button_1d">1 Day</string>
     <string name="radio_button_5d">5 Days</string>
-    <string name="chart_timer_text">Auto Update in %1$ss</string>
-    <string name="chart_url_1d">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=1d</string>
-    <string name="chart_url_5d">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=5d</string>
+    <string name="chart_timer_text">Auto update in %1$s</string>
+    <string name="chart_url_1d" translatable="false">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=1d</string>
+    <string name="chart_url_5d" translatable="false">https://chart.yahoo.com/z?s=BTCUSD=X&amp;t=5d</string>
 
     <!-- Block Fragment -->
     <string name="blockchain_description">View information about specific block:</string>
@@ -49,5 +48,3 @@
     <string name="menu_title">Details</string>
 
 </resources>
-
-<!-- todo add any missing German strings -->

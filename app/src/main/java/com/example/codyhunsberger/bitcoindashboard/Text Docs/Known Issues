@@ -1,0 +1,16 @@
+I made significant progress last-minute in severe issues like fast memory leaks, JSON strings not
+making it to fragment displays, etc. but there is still plenty of room for improvement.
+
+Known issues:
+
+    ChartFragment countdown timer
+        -No issues if left to run down and loop on its own
+        -Every time radio button switches chart, a new timer is added and they fight over being
+            displayed in the textview
+        -Crashes app after a moment
+
+    Layout cramping in landscape mode
+        -Mostly cosmetic but can hinder usability
+
+    BackStack stacks too many fragments
+        -Results in slow memory leak

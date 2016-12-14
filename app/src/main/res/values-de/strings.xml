@@ -34,7 +34,6 @@
     <string name="chart_description">Wählen Sie einen Zeitrahmen, um die Werteänderung von Bitcoin anzuzeigen</string>
     <string name="radio_button_1d">1 Tag</string>
     <string name="radio_button_5d">5 Tage</string>
-    <string name="chart_refresh_timer_text">Seite aktualisieren am %1$ss</string>
 
     <!-- Block Fragment -->
     <string name="blockchain_description">Informationen zu einem bestimmten Block anzeigen:</string>
@@ -42,5 +41,8 @@
 
     <!-- Junk -->
     <string name="menu_title">Einzelheiten</string>
+    <string name="ticker_footer">Preis wurde zuletzt aktualisiert am %1$s GMT via blockr.io API und BTC-e trade data</string>
+    <string name="long_click_desc">Lange drücken Sie eine gespeicherte Adresse zu entfernen.</string>
+    <string name="chart_timer_text">Lange drücken Sie eine gespeicherte Adresse zu entfernen.</string>
 
 </resources>

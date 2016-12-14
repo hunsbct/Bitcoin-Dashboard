@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:typeface">monospace</item>
         <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorPrimaryDark">@color/banner_blue</item>
         <item name="colorAccent">@color/bitcoin_orange</item>

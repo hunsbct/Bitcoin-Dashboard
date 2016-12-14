@@ -5,56 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.codyhunsberger.bitcoindashboard.WalletFragment"
-    android:padding="10dp">
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wallet_address"
-            android:id="@+id/walletAddresstextView"
-            android:layout_row="0"
-            android:layout_column="0" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="60sp"
-            android:textStyle="bold"
-            android:id="@+id/walletBalanceTextView"
-            android:layout_row="6"
-            android:layout_column="0" />
-    </GridLayout>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/walletEditText" />
+    android:padding="10dp"
+    android:weightSum="100">
 
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.45"
+        android:layout_weight="30"
         android:id="@+id/walletListView"
         tools:listitem="@layout/list_rows"
         android:textAlignment="textStart"
         android:longClickable="true"
         android:textFilterEnabled="false"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:id="@+id/walletAddresstextView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:textSize="60sp"
+            android:textStyle="bold"
+            android:id="@+id/walletBalanceTextView"
+            android:gravity="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/walletEditText"
+        android:paddingTop="15sp"
+        android:paddingBottom="15sp"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_weight="10"
         android:text="@string/wallet_button"
         android:background="@drawable/button_select"
         android:id="@+id/createWalletButton"
@@ -63,14 +58,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"
+        android:layout_weight="10"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/long_click_desc"
         android:textStyle="italic"
         android:id="@+id/longClickDescTextView"
-        android:paddingTop="10dp"
+        android:paddingTop="0dp"
         android:gravity="center_horizontal"/>
 
 </LinearLayout>
-
-<!-- todo add text description at top -->
