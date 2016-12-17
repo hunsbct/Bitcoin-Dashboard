@@ -21,12 +21,15 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">View Wallet Data</string>
-    <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/</string>
+    <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/%1$s</string>
     <string name="long_click_desc">Long-press a saved address to remove.</string>
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Current Market Value</string>
-    <string name="ticker_footer">Price Last Updated on %1$s GMT via blockr.io API and BTC-e trade data</string>
+    <string name="coins_total_label">Coins Mined So Far</string>
+    <string name="ticker_footer1">Price Last Updated at %1$s.</string>
+    <string name="ticker_footer2">Data Last Refreshed at %1$s </string>
+    <string name="ticker_footer_sources">via blockr.io API and BTC-e trade data</string>
     <string name="ticker_api_url" translatable="false">http://btc.blockr.io/api/v1/coin/info</string>
 
 

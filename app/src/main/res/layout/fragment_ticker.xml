@@ -10,8 +10,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
+        android:layout_height="wrap_content"
         android:text="@string/current_value_text"
         android:id="@+id/currentValueTextViewDescription"
         android:layout_gravity="center_horizontal|top"
@@ -20,23 +19,42 @@
         android:paddingBottom="15dp"
         android:textSize="20sp"
         android:gravity="center|bottom"/>
-    <!-- todo make more visually appealing -->
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:textSize="60sp"
         android:id="@+id/currentValueTextViewPrice"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.5"
         android:padding="10dp"
         android:textStyle="bold"
         android:gravity="center_vertical|end" />
 
-    <Button
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/coinsTotalLabel"
+        android:text="@string/coins_total_label"
+        android:textSize="12sp"
+        android:textAlignment="textEnd"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/coinsTotal"
+        android:textSize="12sp"
+        android:textAlignment="textEnd"/>
+
+    <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_weight="1"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/refresh_button"
         android:id="@+id/currentValueRefreshButton"
         android:background="@drawable/button_select"
@@ -45,11 +63,23 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ticker_footer"
-        android:id="@+id/currentValueTextViewSources"
+        android:id="@+id/footerTv1"
         android:textSize="12sp"
         android:textAlignment="textStart"
-        android:padding="5sp"/>
+        android:paddingTop="5sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/footerTv2"
+        android:textSize="12sp"
+        android:textAlignment="textStart"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/footerTv3"
+        android:textSize="12sp"
+        android:textAlignment="textStart"
+        android:paddingBottom="5sp"/>
 
 </LinearLayout>
 

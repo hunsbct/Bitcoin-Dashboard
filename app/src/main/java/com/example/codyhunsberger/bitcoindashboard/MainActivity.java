@@ -24,10 +24,7 @@ public class MainActivity extends Activity implements
 	// class can implement several listeners separated with commas
 
 	boolean twoPanes;
-	String 	tickerApiUrl = getResources().getString(R.string.ticker_api_url),
-			walletApiUrl = getResources().getString(R.string.wallet_api_url),
-			jsonString;
-
+	String 	results;
 	ArrayList<String> savedWallets = new ArrayList<>();
 
 	@SuppressLint("CommitTransaction")
@@ -42,7 +39,7 @@ public class MainActivity extends Activity implements
 			switchFragments(new ListFragment());
 		}
 		else {
-			switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
+			switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
 			// Only adding the second here, since in twoPane mode the list is static
 		}
 		// todo replace b with existing fragment not
@@ -55,7 +52,7 @@ public class MainActivity extends Activity implements
 		// Don't perform frag transaction if it is already in place.
 		switch(position) {
 			case 0:
-				switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
+				switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
 				break;
 			case 1:
 				switchFragments(new ChartFragment());
@@ -99,16 +96,17 @@ public class MainActivity extends Activity implements
 		}
 
 		switchFragments(WalletFragment.newInstance(
-				savedWallets,getJsonString(walletApiUrl + walletAddress)));
+							savedWallets,getJsonString(getResources()
+						   					.getString(R.string.wallet_api_url, walletAddress))));
 
 	}
 
 	public void onRefresh() {
-		switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
+		switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
 	}
 
 	public String getJsonString(String url) {
-		String results = "";
+		results = "";
 		UrlToJsonString urlToJsonString = new UrlToJsonString();
 		urlToJsonString.execute(url);
 
@@ -120,6 +118,7 @@ public class MainActivity extends Activity implements
 				e.printStackTrace();
 			}
 		}
+
 		if (results.length() == 0)
 		{
 			Toast.makeText(this, "Error retrieving data from API.", Toast.LENGTH_SHORT).show();
@@ -168,8 +167,7 @@ public class MainActivity extends Activity implements
 				throw new RuntimeException("Exception while calling URL:" + urlString[0], e);
 			}
 
-			String result = sb.toString();
-			jsonString = result;
+			results = sb.toString();
 			locked = false;
 			return null;
 		}

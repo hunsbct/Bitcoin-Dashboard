@@ -17,6 +17,7 @@ public class ListFragment extends Fragment {
 
     String[] menuOptionsArray;
     ArrayList<String> listOptionsAL;
+
     private ListSelectionListener listener;
 
     public ListFragment() {
