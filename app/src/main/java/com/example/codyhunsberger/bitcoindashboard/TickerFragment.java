@@ -101,3 +101,4 @@ public class TickerFragment extends Fragment {
     }
 
 }
+// todo use exchangerate url, spinner to select currency

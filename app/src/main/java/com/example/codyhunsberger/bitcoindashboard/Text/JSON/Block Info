@@ -1,0 +1,24 @@
+{
+  "status": "success",
+  "data": {
+    "nb": 12345,
+    "hash": "00000000b8980ec1fe96bc1b4425788ddc88dd36699521a448ebca2020b38699",
+    "version": 1,
+    "confirmations": 431520,
+    "time_utc": "2009-04-26T22:25:32Z",
+    "nb_txs": 1,
+    "merkleroot": "fd1dc97a826eb93b485b6bada84a807ee81181f7ab2720cefb5fa96729363157",
+    "next_block_nb": 12346,
+    "prev_block_nb": 12344,
+    "next_block_hash": "00000000a08518aae9f8f95cc295d1331b937b12e1e885b44ed07d95f9a625e5",
+    "prev_block_hash": "0000000076876082384460fb5a231cc5a5e874b9762e15a4e7b1fc068f749cdf",
+    "fee": "0.00000000",
+    "vout_sum": 50,
+    "size": "216",
+    "difficulty": 1,
+    "days_destroyed": 0,
+    "extras": null
+  },
+  "code": 200,
+  "message": ""
+}

@@ -1,0 +1,59 @@
+{
+  "status": "success",
+  "data": {
+    "coin": {
+      "name": "Bitcoin",
+      "abbr": "BTC",
+      "logo": "",
+      "homepage": ""
+    },
+    "volume": {
+      "current": 16048275,
+      "all": 21000000,
+      "perc": 76.42
+    },
+    "markets": {
+      "btce": {
+        "name": "BTC-e",
+        "last_update_utc": "2016-12-17T18:25:01Z",
+        "value": 778.778,
+        "currency": "USD",
+        "daily_change": {
+          "value": "773.98600000",
+          "perc": 0.62,
+          "diff": 4.792
+        }
+      },
+      "coinbase": {
+        "name": "Coinbase",
+        "last_update_utc": "2016-12-17T18:25:02Z",
+        "value": 790.99,
+        "currency": "USD",
+        "daily_change": {
+          "value": "779.03000000",
+          "perc": 1.54,
+          "diff": 11.96
+        }
+      }
+    },
+    "last_block": {
+      "nb": 443866,
+      "time_utc": "2016-12-17T18:27:14Z",
+      "nb_txs": 2468,
+      "fee": "0.67152303",
+      "difficulty": "310153855703.430000000000000"
+    },
+    "next_difficulty": {
+      "difficulty": 275255066642.29,
+      "retarget_in": 1670,
+      "retarget_block": 445536,
+      "perc": -11.252089380603
+    },
+    "websocket": {
+      "ws_url": "ws:\/\/btc.blockr.io:9081",
+      "wss_url": "wss:\/\/btc.blockr.io:8081"
+    }
+  },
+  "code": 200,
+  "message": ""
+}

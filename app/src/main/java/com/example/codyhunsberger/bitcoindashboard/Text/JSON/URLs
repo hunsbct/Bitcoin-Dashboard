@@ -1,0 +1,24 @@
+Coin Info
+
+Exchange Rate
+http://btc.blockr.io/api/v1/exchangerate/current
+
+Single Address Info
+http://btc.blockr.io/api/v1/address/info/[address]
+
+Multiple Address Info
+http://btc.blockr.io/api/v1/address/info/[address1],[address2]
+
+Single Address Balance
+http://btc.blockr.io/api/v1/address/balance/[address]
+
+Multiple Address Balance
+http://btc.blockr.io/api/v1/address/balance/[address1],[address2]
+
+Block Info
+http://btc.blockr.io/api/v1/block/info/[parameter]
+Where parameter can be:
+- block number (eg: 223212)
+- block hash (eg: 0000000000000000210b10d620600dc1cc2380bb58eb2408f9767eb792ed31fa)
+- word "last" - this will always return the latest block
+- word "first" - this will always return the first block

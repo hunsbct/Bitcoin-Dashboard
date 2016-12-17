@@ -1,0 +1,18 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "address": "198aMn6ZYAczwrE5NvNTUMyJ5qkfy4g3Hi",
+      "balance": 8000.00236957,
+      "balance_multisig": 0
+    },
+    {
+      "address": "1L8meqhMTRpxasdGt8DHSJfscxgHHzvPgk",
+      "balance": 0,
+      "balance_multisig": 0
+    }
+  ],
+  "code": 200,
+  "message": ""
+}
+

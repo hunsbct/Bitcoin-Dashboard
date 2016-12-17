@@ -194,3 +194,5 @@ public class MainActivity extends Activity implements
 		// Would have set locked = false in onPostExecute but I can't get it to call that method
 	}
 }
+
+// todo signed apk

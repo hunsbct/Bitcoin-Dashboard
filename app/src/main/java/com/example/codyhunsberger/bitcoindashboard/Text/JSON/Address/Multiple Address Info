@@ -1,0 +1,53 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "address": "198aMn6ZYAczwrE5NvNTUMyJ5qkfy4g3Hi",
+      "is_unknown": false,
+      "balance": 8000.00236957,
+      "balance_multisig": 0,
+      "totalreceived": 8000.00236957,
+      "nb_txs": 33,
+      "first_tx": {
+        "time_utc": "2009-02-22T10:50:53Z",
+        "tx": "0f0fbcc18fd0d090ad3402574df8404cec1176bc000f9aa0dc19f8d832ff94db",
+        "block_nb": "5219",
+        "value": 400,
+        "confirmations": 438648
+      },
+      "last_tx": {
+        "time_utc": "2016-08-11T16:33:24Z",
+        "tx": "c653ac1e7a66117e097dd16cfd122b24b0f92060d096d8754a1e550d4c64f520",
+        "block_nb": "424718",
+        "value": 0.0002,
+        "confirmations": 19149
+      },
+      "is_valid": true
+    },
+    {
+      "address": "1L8meqhMTRpxasdGt8DHSJfscxgHHzvPgk",
+      "is_unknown": false,
+      "balance": 0,
+      "balance_multisig": 0,
+      "totalreceived": 88.34814505,
+      "nb_txs": 158,
+      "first_tx": {
+        "time_utc": "2011-07-16T04:49:19Z",
+        "tx": "9454b7029ef49c73e36340e3e02d564284e28f72915f1e16aa8a6a6bb92e19f0",
+        "block_nb": "136507",
+        "value": 0.16332,
+        "confirmations": 307360
+      },
+      "last_tx": {
+        "time_utc": "2013-11-09T23:56:53Z",
+        "tx": "0bf259b8bcbc9f9ea15ca7e8d3ca45ec6ac3a1dc4ca8e4f03811e71365bdf751",
+        "block_nb": "268747",
+        "value": -0.43751105,
+        "confirmations": 175120
+      },
+      "is_valid": true
+    }
+  ],
+  "code": 200,
+  "message": ""
+}
