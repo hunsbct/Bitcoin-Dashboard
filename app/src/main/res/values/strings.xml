@@ -21,9 +21,7 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">View Wallet Data</string>
-    <string name="wallet_address">Balance For Address %1$s</string>
-    <string name="wallet_balance">%1$s BTC</string>
-    <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/%1$s</string>
+    <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/</string>
     <string name="long_click_desc">Long-press a saved address to remove.</string>
 
     <!-- Ticker Fragment -->

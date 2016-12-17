@@ -17,11 +17,6 @@ import java.util.Locale;
 public class TickerFragment extends Fragment {
 
     private RefreshListener listener;
-    float value;
-    String jsonString = null, timestamp, timestampText, valueFormatted;
-    NumberFormat n = NumberFormat.getCurrencyInstance(Locale.US);
-    JSONObject jsonObj = null, data, markets, btce;
-    TextView timestampTV, valueTV;
 
     public TickerFragment() {
 
@@ -44,13 +39,13 @@ public class TickerFragment extends Fragment {
             savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_ticker, container, false);
+        TextView    valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice),
+                    timestampTV = (TextView) v.findViewById(R.id.currentValueTextViewSources);
 
-        valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice);
-        timestampTV = (TextView) v.findViewById(R.id.currentValueTextViewSources);
+        String[] values = getVariablesFromJson(getArguments().getString("json"));
 
-        jsonString = getArguments().getString("json");
-
-        setTickerVariablesFromJson(jsonString);
+        valueTV.setText(values[0]);
+        timestampTV.setText(values[1]);
 
         Button refresh = (Button) v.findViewById(R.id.currentValueRefreshButton);
         View.OnClickListener ocl = new View.OnClickListener() {
@@ -63,25 +58,31 @@ public class TickerFragment extends Fragment {
         return v;
     }
 
-    public void setTickerVariablesFromJson(String jsonString) {
+    /*
+        Array indices as follows:
+        0 - Value formatted
+        1 - Timestamp formatted
+     */
+    public String[] getVariablesFromJson(String jsonString) {
+        String[] values = new String[2];
+        JSONObject jsonObj, data, markets, btce;
         try {
             jsonObj = new JSONObject(jsonString);
             data = new JSONObject(jsonObj.getString("data"));
             markets = new JSONObject(data.getString("markets"));
             btce = new JSONObject(markets.getString("btce"));
 
-            value = Float.parseFloat(btce.getString("value"));
-            valueFormatted = n.format(value);
-            valueTV.setText(valueFormatted);
 
-            timestamp = formatTimestampData(btce.getString("last_update_utc"));
-            timestampText = getResources().getString(R.string.ticker_footer, timestamp);
-            timestampTV.setText(timestampText);
+            values[0] = NumberFormat.getCurrencyInstance(Locale.US)
+                        .format(Float.parseFloat(btce.getString("value")));
+            values[1] = getResources().getString(
+                    R.string.ticker_footer, formatTimestampData(btce.getString("last_update_utc")));
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
+        return values;
     }
 
     @Override

@@ -24,10 +24,8 @@ import java.util.ArrayList;
 public class WalletFragment extends Fragment {
 	ArrayList<String> savedWallets = new ArrayList<>();
 	ArrayAdapter<String> listAdapter;
-	String walletAddress, walletAddressFormatted = "", walletBalanceFormatted = "", jsonString,
-			balance = "", isUnknown = "";
-	JSONObject jsonObj, data;
 	TextView addressTV, balanceTV;
+
 	private WalletListUpdateListener listener;
 
 	public interface WalletListUpdateListener {
@@ -47,67 +45,60 @@ public class WalletFragment extends Fragment {
 		return fragment;
 	}
 
+	public static WalletFragment newInstance(ArrayList<String> wallets) {
+		WalletFragment fragment = new WalletFragment();
+		Bundle args = new Bundle();
+		args.putStringArrayList("savedWallets", wallets);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_wallet, container, false);
-		// True if adding wallet, false if removing
 		ListView lv = (ListView) v.findViewById(R.id.walletListView);
 		final EditText walletEditText = (EditText) v.findViewById(R.id.walletEditText);
 		Button button = (Button) v.findViewById(R.id.createWalletButton);
 		addressTV = (TextView) v.findViewById(R.id.walletAddresstextView);
 		balanceTV = (TextView) v.findViewById(R.id.walletBalanceTextView);
-
-		savedWallets = getArguments().getStringArrayList("savedWallets");
-		jsonString = getArguments().getString("json");
-
-		// If jsonString arg is null
-		if(jsonString == null) {
-			// If no json and some wallets
-			if((savedWallets != null) && (savedWallets.size() > 0)) {
-				walletAddress = savedWallets.get(0);
-				listener.onEnterWallet(walletAddress, false);
-			}
-			// If no json and no wallets
-		}
-		else {
-			setVariablesFromJson(jsonString);
-			// Sets values of data, isUnknown, balance, balanceDouble, walletAddressFormatted,
-			// and walletBalanceFormatted
-
-			addressTV.setText(walletAddressFormatted);
-			balanceTV.setText(walletBalanceFormatted);
-		}
-
 		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_rows, savedWallets);
 		lv.setAdapter(listAdapter);
+
+		String json;
+		String[] values;
+
+		savedWallets = getArguments().getStringArrayList("savedWallets");
+		json = getArguments().getString("json");
+
+		// If jsonString arg is null
+		if(json != null) {
+			values = getVariablesFromJson(json);
+			// Sets values of data, isUnknown, balance, balanceDouble, walletAddressFormatted,
+			// and walletBalanceFormatted
+			addressTV.setText(values[0]);
+			balanceTV.setText(values[1]);
+		}
+		else {
+			Toast.makeText(getActivity(), "Select a wallet from the list or enter a new address",
+						   Toast.LENGTH_SHORT).show();
+		}
+
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				hideKeyboard(getActivity(), view);
-				walletAddress = savedWallets.get(position);
-				walletEditText.setText(walletAddress);
+				walletEditText.setText(savedWallets.get(position));
 			}
 		});
 
-		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
-					id) {
-				String walletToRemove = savedWallets.get(position);
-				savedWallets.remove(position);
-				listener.onEnterWallet(walletToRemove, false);
-				return true;
-			}
-		});
-
-
+		// Passes true to listener because it should be added if not in list
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				hideKeyboard(getActivity(), view);
 				// Hides keyboard on button press
-				walletAddress = walletEditText.getText().toString();
+				String walletAddress = walletEditText.getText().toString();
 				if(walletAddressEntryStructuralValidation(walletAddress)) {
 					listener.onEnterWallet(walletAddress, true);
 					// Pass true if adding wallet, false to delete from list
@@ -120,34 +111,44 @@ public class WalletFragment extends Fragment {
 				}
 			}
 		});
+
+		// Passes false to listener because it should be removed if in list
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
+					id) {
+				String walletToRemove = savedWallets.get(position);
+				savedWallets.remove(position);
+				listener.onEnterWallet(walletToRemove, false);
+				return true;
+			}
+		});
+
 		return v;
 	}
 
-	// Sets values of data, receivedWalletAddress, isUnknown, balance, balanceDouble,
-	// walletAddressFormatted, and walletBalanceFormatted
-	public void setVariablesFromJson(String jsonString) {
-		DecimalFormat df = new DecimalFormat("0.000");
+	/*
+		Array indices as follows:
+		0 - Address
+		1 - Balance
+	 */
+	public String[] getVariablesFromJson(String jsonString) {
+		String[] values = new String[2];
+		JSONObject jsonObj, data;
+		DecimalFormat df = new DecimalFormat("#.###");
 		try {
 			jsonObj = new JSONObject(jsonString);
 			data = new JSONObject(jsonObj.getString("data"));
-			walletAddress = data.getString("address");
-			isUnknown = data.getString("is_unknown");
+			values[0] = data.getString("address");
 			// The JSON also passes an item called "is_valid", not sure the difference yet
 
-			if(isUnknown.equals("false")) {
+			if(data.getString("is_unknown").equals("false")) {
 				try {
-					balance = data.getString("balance");
-					Double balanceDouble = Double.parseDouble(balance);
-
-					walletBalanceFormatted = df.format(balance);
+					values[1] = df.format(Double.parseDouble(data.getString("balance"))) + " BTC";
 				}
 				catch(Exception e) {
 					e.printStackTrace();
 				}
-				walletAddressFormatted = getResources().getString(R.string.wallet_address,
-																   walletAddress);
-				walletBalanceFormatted = getResources().getString(R.string.wallet_balance,
-																  balance);
 			}
 			else {
 				Toast.makeText(getActivity(), "Wallet address not found by API, please double " +
@@ -157,6 +158,7 @@ public class WalletFragment extends Fragment {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		return values;
 	}
 
 	@Override

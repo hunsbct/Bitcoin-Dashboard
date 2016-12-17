@@ -2,13 +2,12 @@ package com.example.codyhunsberger.bitcoindashboard;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,10 +24,9 @@ public class MainActivity extends Activity implements
 	// class can implement several listeners separated with commas
 
 	boolean twoPanes;
-	String jsonString, tickerJsonString, walletJsonString;
-	FragmentManager fm = getFragmentManager();
-	FragmentTransaction ft;
-	String tickerApiUrl, walletApiUrl;
+	String 	tickerApiUrl = getResources().getString(R.string.ticker_api_url),
+			walletApiUrl = getResources().getString(R.string.wallet_api_url),
+			jsonString;
 
 	ArrayList<String> savedWallets = new ArrayList<>();
 
@@ -38,23 +36,13 @@ public class MainActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		tickerApiUrl = getResources().getString(R.string.ticker_api_url);
-		walletApiUrl = getResources().getString(R.string.wallet_api_url);
-
 		twoPanes = findViewById(R.id.fragmentContainerB) != null;
 
-		getJsonObject(tickerApiUrl);
-		tickerJsonString = jsonString;
-
 		if(!twoPanes) {
-			ft = fm.beginTransaction();
-			ft.replace(R.id.fragmentContainerA, new ListFragment());
-			ft.commit();
+			switchFragments(new ListFragment());
 		}
 		else {
-			ft = fm.beginTransaction();
-			ft.replace(R.id.fragmentContainerB, TickerFragment.newInstance(tickerJsonString));
-			ft.commit();
+			switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
 			// Only adding the second here, since in twoPane mode the list is static
 		}
 		// todo replace b with existing fragment not
@@ -64,46 +52,34 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onListFragOptionSelected(int position) {
-		FragmentTransaction ft = fm.beginTransaction();
+		// Don't perform frag transaction if it is already in place.
 		switch(position) {
 			case 0:
-				if(!twoPanes) {
-					ft.replace(R.id.fragmentContainerA,
-							   TickerFragment.newInstance(tickerJsonString))
-							.addToBackStack(null).commit();
-				}
-				else {
-					ft.replace(R.id.fragmentContainerB, TickerFragment.newInstance(tickerJsonString))
-							.commit();
-				}
+				switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
 				break;
 			case 1:
-				if(!twoPanes) {
-					ft.replace(R.id.fragmentContainerA, new ChartFragment())
-							.addToBackStack(null)
-							.commit();
-				}
-				else {
-					ft.replace(R.id.fragmentContainerB, new ChartFragment())
-							.commit();
-				}
+				switchFragments(new ChartFragment());
 				break;
 			case 2:
-				if(!twoPanes) {
-					ft.replace(R.id.fragmentContainerA, WalletFragment.newInstance
-							(savedWallets, walletJsonString)).addToBackStack(null).commit();
-				}
-				else {
-					ft.replace(R.id.fragmentContainerB, WalletFragment.newInstance
-							(savedWallets, walletJsonString)).commit();
-				}
+				switchFragments(WalletFragment.newInstance(savedWallets));
 				break;
 		}
 	}
 
+	public void switchFragments(Fragment frag) {
+		FragmentManager fragMan = getFragmentManager();
+		FragmentTransaction fragTrans = fragMan.beginTransaction();
+		if (!twoPanes) {
+			fragTrans.replace(R.id.fragmentContainerA, frag).addToBackStack(null).commit();
+		}
+		else {
+			fragTrans.replace(R.id.fragmentContainerB, frag).commit();
+		}
+
+	}
+
 	// Boolean indicates whether it was a button press or a long press
 	public void onEnterWallet(String walletAddress, boolean calledByButton) {
-		String fullWalletApiUrl;
 		boolean walletExists = false;
 
 		for(String w : savedWallets) {
@@ -122,21 +98,17 @@ public class MainActivity extends Activity implements
 			savedWallets.remove(savedWallets.indexOf(walletAddress));
 		}
 
-		fullWalletApiUrl = getResources().getString(R.string.wallet_api_url, walletAddress);
-		getJsonObject(fullWalletApiUrl);
-		walletJsonString = jsonString;
-		onListFragOptionSelected(2);
+		switchFragments(WalletFragment.newInstance(
+				savedWallets,getJsonString(walletApiUrl + walletAddress)));
 
 	}
 
 	public void onRefresh() {
-		getJsonObject(getResources().getString(R.string.ticker_api_url));
-		onListFragOptionSelected(0);
+		switchFragments(TickerFragment.newInstance(getJsonString(tickerApiUrl)));
 	}
 
-	public JSONObject getJsonObject(String url) {
-		jsonString = "";
-		JSONObject results = null;
+	public String getJsonString(String url) {
+		String results = "";
 		UrlToJsonString urlToJsonString = new UrlToJsonString();
 		urlToJsonString.execute(url);
 
@@ -145,17 +117,12 @@ public class MainActivity extends Activity implements
 				Thread.sleep(10);
 			}
 			catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
-		if (jsonString.length() > 0)
+		if (results.length() == 0)
 		{
-			try {
-				results = new JSONObject(jsonString);
-			}
-			catch(Exception e) {
-				Toast.makeText(this, "Error retrieving data from API.", Toast.LENGTH_SHORT).show();
-			}
+			Toast.makeText(this, "Error retrieving data from API.", Toast.LENGTH_SHORT).show();
 		}
 
 		return results;
@@ -208,7 +175,4 @@ public class MainActivity extends Activity implements
 		}
 		// Would have set locked = false in onPostExecute but I can't get it to call that method
 	}
-
 }
-
-// todo signed apk
