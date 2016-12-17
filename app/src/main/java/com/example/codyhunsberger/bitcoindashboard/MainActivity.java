@@ -6,6 +6,9 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -40,7 +43,7 @@ public class MainActivity extends Activity implements
 
 		twoPanes = findViewById(R.id.fragmentContainerB) != null;
 
-		setJsonString(tickerApiUrl);
+		getJsonObject(tickerApiUrl);
 		tickerJsonString = jsonString;
 
 		if(!twoPanes) {
@@ -120,18 +123,20 @@ public class MainActivity extends Activity implements
 		}
 
 		fullWalletApiUrl = getResources().getString(R.string.wallet_api_url, walletAddress);
-		setJsonString(fullWalletApiUrl);
+		getJsonObject(fullWalletApiUrl);
 		walletJsonString = jsonString;
 		onListFragOptionSelected(2);
 
 	}
 
 	public void onRefresh() {
-		setJsonString(getResources().getString(R.string.ticker_api_url));
+		getJsonObject(getResources().getString(R.string.ticker_api_url));
 		onListFragOptionSelected(0);
 	}
 
-	public void setJsonString(String url) {
+	public JSONObject getJsonObject(String url) {
+		jsonString = "";
+		JSONObject results = null;
 		UrlToJsonString urlToJsonString = new UrlToJsonString();
 		urlToJsonString.execute(url);
 
@@ -143,7 +148,17 @@ public class MainActivity extends Activity implements
 
 			}
 		}
+		if (jsonString.length() > 0)
+		{
+			try {
+				results = new JSONObject(jsonString);
+			}
+			catch(Exception e) {
+				Toast.makeText(this, "Error retrieving data from API.", Toast.LENGTH_SHORT).show();
+			}
+		}
 
+		return results;
 	}
 
 	class UrlToJsonString extends AsyncTask<String, Void, Void> {
@@ -164,25 +179,25 @@ public class MainActivity extends Activity implements
 			try {
 				URL url = new URL(urlString[0]);
 				urlConn = url.openConnection();
-				if (urlConn != null)
+				if(urlConn != null)
 					urlConn.setReadTimeout(60 * 1000);
-				if (urlConn != null && urlConn.getInputStream() != null) {
+				if(urlConn != null && urlConn.getInputStream() != null) {
 					in = new InputStreamReader(urlConn.getInputStream(),
 											   Charset.defaultCharset());
 					BufferedReader bufferedReader = new BufferedReader(in);
 					int cp;
-					while ((cp = bufferedReader.read()) != -1) {
+					while((cp = bufferedReader.read()) != -1) {
 						sb.append((char) cp);
 					}
 					bufferedReader.close();
 				}
-				if (in != null) {
+				if(in != null) {
 					in.close();
 				}
 				else {
 				}
 			}
-			catch (Exception e) {
+			catch(Exception e) {
 				throw new RuntimeException("Exception while calling URL:" + urlString[0], e);
 			}
 
@@ -193,6 +208,7 @@ public class MainActivity extends Activity implements
 		}
 		// Would have set locked = false in onPostExecute but I can't get it to call that method
 	}
+
 }
 
 // todo signed apk
