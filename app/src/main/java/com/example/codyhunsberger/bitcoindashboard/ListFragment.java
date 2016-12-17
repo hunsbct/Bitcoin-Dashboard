@@ -21,7 +21,6 @@ public class ListFragment extends Fragment {
     private ListSelectionListener listener;
 
     public ListFragment() {
-
     }
 
     public interface ListSelectionListener {
