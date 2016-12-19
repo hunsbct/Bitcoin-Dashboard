@@ -21,6 +21,7 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">View Wallet Data</string>
+    <string name="wallet_view_button">View</string>
     <string name="wallet_api_url" translatable="false">http://btc.blockr.io/api/v1/address/info/%1$s</string>
     <string name="long_click_desc">Long-press a saved address to remove.</string>
 
@@ -30,7 +31,13 @@
     <string name="ticker_footer1">Price Last Updated at %1$s.</string>
     <string name="ticker_footer2">Data Last Refreshed at %1$s </string>
     <string name="ticker_footer_sources">via blockr.io API and BTC-e trade data</string>
-    <string name="ticker_api_url" translatable="false">http://btc.blockr.io/api/v1/coin/info</string>
+    <string name="ticker_api_url" translatable="false">http://btc.blockr.io/api/v1/exchangerate/current</string>
+    <string-array name="currencies">
+        <item name="usd">USD</item>
+        <item name="eur">EUR</item>
+        <item name="jpy">JPY</item>
+        <item name="gbp">GBP</item>
+    </string-array>
 
 
     <!-- Chart Fragment -->
@@ -49,3 +56,5 @@
     <string name="menu_title">Details</string>
 
 </resources>
+
+<!-- todo add spanish -->

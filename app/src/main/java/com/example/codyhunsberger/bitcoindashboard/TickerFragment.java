@@ -7,20 +7,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class TickerFragment extends Fragment {
 
+    long selectedCurrency;
+    String[] values;
     private RefreshListener listener;
 
     public TickerFragment() {
@@ -44,24 +51,48 @@ public class TickerFragment extends Fragment {
             savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_ticker, container, false);
-        TextView    valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice),
+        final TextView    valueTV = (TextView) v.findViewById(R.id.currentValueTextViewPrice),
                     timestampTV = (TextView) v.findViewById(R.id.footerTv1),
                     refreshedTV = (TextView) v.findViewById(R.id.footerTv2),
-                    sourcesTV = (TextView) v.findViewById((R.id.footerTv3)),
-                    coinsTotalTV = (TextView) v.findViewById(R.id.coinsTotal);
+                    sourcesTV = (TextView) v.findViewById((R.id.footerTv3));
+                    //coinsTotalTV = (TextView) v.findViewById(R.id.coinsTotal);
+                    // fix
+        Button refresh = (Button) v.findViewById(R.id.currentValueRefreshButton);
+        Spinner currencySpinner = (Spinner) v.findViewById(R.id.currencySpinner);
+        ArrayAdapter<CharSequence> adapter;
         Date date = new Date();
+        values = getVariablesFromJson(getArguments().getString("json"));
 
-        String[] values = getVariablesFromJson(getArguments().getString("json"));
-
+        // set to USD by default
         valueTV.setText(values[0]);
-        coinsTotalTV.setText(values[2]);
+        //coinsTotalTV.setText(values[2]);
+        // fix
+
+        // Timestamp will always be at the end of the array
         timestampTV.setText(getResources().getString(R.string.ticker_footer1,
-                                                     formatTimestamp(values[1])));
+                                                     formatTimestamp(values[values.length - 1])));
         refreshedTV.setText(getResources().getString(R.string.ticker_footer2,
                                      formatCurrentDate(date)));
         sourcesTV.setText(getResources().getString(R.string.ticker_footer_sources));
 
-        Button refresh = (Button) v.findViewById(R.id.currentValueRefreshButton);
+        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.currencies,
+                                                  android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currencySpinner.setAdapter(adapter);
+        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
+                                       int position, long id) {
+                selectedCurrency = position;
+                valueTV.setText(values[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,33 +104,55 @@ public class TickerFragment extends Fragment {
     }
 
     /*
-        Array indices as follows:
-        0 - Value formatted
-        1 - Timestamp unformatted
-        2 - Coins mined so far
+        Array indices are as follows:
+        0 to N-1 - currencies in order of spinner appearance
+        N - timestamp
      */
+
+    // todo pass two jsonStrings to combine exchange rates and volume
     public String[] getVariablesFromJson(String jsonString) {
-        String[] values = new String[3];
-        JSONObject jsonObj, data, volume, markets, btce;
+        String[] values = new String[5];
+        JSONObject jsonObj, arrayItem, rates;
+        JSONArray data;
+        NumberFormat n = NumberFormat.getCurrencyInstance(Locale.getDefault());
         try {
             jsonObj = new JSONObject(jsonString);
-            data = new JSONObject(jsonObj.getString("data"));
-            volume = data.getJSONObject("volume");
-            markets = new JSONObject(data.getString("markets"));
-            btce = new JSONObject(markets.getString("btce"));
+            data = jsonObj.getJSONArray("data");
+            arrayItem = data.getJSONObject(0);
+            rates = arrayItem.getJSONObject("rates");
+            String btcValue = rates.getString("BTC");
 
+            n.setCurrency(Currency.getInstance("USD"));
+            values[0] = n.format(baseBtc(btcValue, rates.getString("USD")));
 
-            values[0] = NumberFormat.getCurrencyInstance(Locale.US)
-                        .format(Float.parseFloat(btce.getString("value")));
-            values[1] = btce.getString("last_update_utc");
-            values[2] = volume.getInt("current") + " of " + volume.getInt("all") + "(" +
-                    volume.getDouble("perc") + "%)";
+            n.setCurrency(Currency.getInstance("EUR"));
+            values[1] = n.format(baseBtc(btcValue, rates.getString("EUR")));
+
+            n.setCurrency(Currency.getInstance("JPY"));
+            values[1] = n.format(baseBtc(btcValue, rates.getString("JPY")));
+
+            n.setCurrency(Currency.getInstance("GBP"));
+            values[1] = n.format(baseBtc(btcValue, rates.getString("GBP")));
+
+            values[4] = jsonObj.getString("updated_utc");
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
         return values;
+    }
+
+    public String baseBtc(String btcValue, String targetCurrencyValue) {
+        float targetCurrencyValueFloat = 0;
+        try {
+            targetCurrencyValueFloat =
+                    (1 / Float.parseFloat(btcValue)) * Float.parseFloat(targetCurrencyValue);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return targetCurrencyValueFloat + "";
     }
 
     @Override
@@ -156,3 +209,34 @@ public class TickerFragment extends Fragment {
 // todo use exchangerate url, spinner to select currency
 // todo expand on ticker layout, add more data starting with number in existence
 // todo expand on wallet layout, make readable
+
+/*
+        Array indices as follows:
+        0 - Value formatted
+        1 - Timestamp unformatted
+        2 - Coins mined so far
+
+    public String[] getVariablesFromJson(String jsonString) {
+        String[] values = new String[3];
+        JSONObject jsonObj, data, volume, markets, btce;
+        try {
+            jsonObj = new JSONObject(jsonString);
+            data = new JSONObject(jsonObj.getString("data"));
+            volume = data.getJSONObject("volume");
+            markets = new JSONObject(data.getString("markets"));
+            btce = new JSONObject(markets.getString("btce"));
+
+
+            values[0] = NumberFormat.getCurrencyInstance(Locale.US)
+                        .format(Float.parseFloat(btce.getString("value")));
+            values[1] = btce.getString("last_update_utc");
+            values[2] = volume.getInt("current") + " of " + volume.getInt("all") + "(" +
+                    volume.getDouble("perc") + "%)";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return values;
+    }
+    */

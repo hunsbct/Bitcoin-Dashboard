@@ -62,13 +62,14 @@ public class WalletFragment extends Fragment {
 		Button button = (Button) v.findViewById(R.id.createWalletButton);
 		addressTV = (TextView) v.findViewById(R.id.walletAddresstextView);
 		balanceTV = (TextView) v.findViewById(R.id.walletBalanceTextView);
-		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_rows, savedWallets);
-		lv.setAdapter(listAdapter);
 
 		String json;
 		String[] values;
 
 		savedWallets = getArguments().getStringArrayList("savedWallets");
+		listAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_rows, savedWallets);
+		lv.setAdapter(listAdapter);
+
 		json = getArguments().getString("json");
 
 		// If jsonString arg is null
@@ -88,7 +89,7 @@ public class WalletFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				hideKeyboard(getActivity(), view);
-				walletEditText.setText(savedWallets.get(position));
+				listener.onEnterWallet(savedWallets.get(position), true);
 			}
 		});
 
@@ -132,6 +133,7 @@ public class WalletFragment extends Fragment {
 		0 - Address
 		1 - Balance
 	 */
+
 	public String[] getVariablesFromJson(String jsonString) {
 		String[] values = new String[2];
 		JSONObject jsonObj, data;
@@ -145,6 +147,7 @@ public class WalletFragment extends Fragment {
 			if(data.getString("is_unknown").equals("false")) {
 				try {
 					values[1] = df.format(Double.parseDouble(data.getString("balance"))) + " BTC";
+					Toast.makeText(getActivity(), "Wallet Found", Toast.LENGTH_SHORT).show();
 				}
 				catch(Exception e) {
 					e.printStackTrace();
@@ -153,6 +156,7 @@ public class WalletFragment extends Fragment {
 			else {
 				Toast.makeText(getActivity(), "Wallet address not found by API, please double " +
 						"check address spelling and try again.", Toast.LENGTH_SHORT).show();
+				// todo delete from list if not found
 			}
 		}
 		catch(Exception e) {

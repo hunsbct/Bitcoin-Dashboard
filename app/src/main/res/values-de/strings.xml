@@ -23,8 +23,6 @@
 
     <!-- Wallet Fragment -->
     <string name="wallet_button">Ansicht Brieftasche-Daten</string>
-    <string name="wallet_address">Balance für Brieftasche-Nummer [%1$s]</string>
-    <string name="wallet_balance">%1$s BTC</string>
 
     <!-- Ticker Fragment -->
     <string name="current_value_text">Aktuellen Marktwert </string>
@@ -41,8 +39,11 @@
 
     <!-- Junk -->
     <string name="menu_title">Einzelheiten</string>
-    <string name="ticker_footer">Preis wurde zuletzt aktualisiert am %1$s GMT via blockr.io API und BTC-e trade data</string>
     <string name="long_click_desc">Lange drücken Sie eine gespeicherte Adresse zu entfernen.</string>
-    <string name="chart_timer_text">Lange drücken Sie eine gespeicherte Adresse zu entfernen.</string>
+    <string name="chart_timer_text">Automatische Aktualisierung am %1$s</string>
+    <string name="coins_total_label">Münzen im Umlauf</string>
+    <string name="ticker_footer1">Preis letzte Aktualisierung am %1$s</string>
+    <string name="ticker_footer2">Letzte Aktualisierung am %1$s</string>
+    <string name="ticker_footer_sources">Über die Handelsdaten von Blockr.io API und BTC-e</string>
 
 </resources>

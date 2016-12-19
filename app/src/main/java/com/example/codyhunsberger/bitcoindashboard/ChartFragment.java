@@ -86,8 +86,7 @@ public class ChartFragment extends Fragment {
 
 		public void onTick(long millisUntilFinished) {
 			secondsUntilFinished = safeLongToInt(millisUntilFinished / 1000);
-			chartTimerText = getResources().getString(
-					R.string.chart_timer_text, secondsUntilFinished);
+			chartTimerText = getResources().getString(R.string.chart_timer_text,secondsUntilFinished);
 			timerText.setText(chartTimerText);
 		}
 	}

@@ -39,7 +39,8 @@ public class MainActivity extends Activity implements
 			switchFragments(new ListFragment());
 		}
 		else {
-			switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
+			switchFragments(TickerFragment.newInstance(getJsonString
+															   (getResources().getString(R.string.ticker_api_url))));
 			// Only adding the second here, since in twoPane mode the list is static
 		}
 		// todo replace b with existing fragment not
@@ -52,7 +53,8 @@ public class MainActivity extends Activity implements
 		// Don't perform frag transaction if it is already in place.
 		switch(position) {
 			case 0:
-				switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
+				switchFragments(TickerFragment.newInstance(getJsonString
+											   (getResources().getString(R.string.ticker_api_url))));
 				break;
 			case 1:
 				switchFragments(new ChartFragment());
@@ -67,12 +69,14 @@ public class MainActivity extends Activity implements
 		FragmentManager fragMan = getFragmentManager();
 		FragmentTransaction fragTrans = fragMan.beginTransaction();
 		if (!twoPanes) {
-			fragTrans.replace(R.id.fragmentContainerA, frag).addToBackStack(null).commit();
+			fragTrans.replace(R.id.fragmentContainerA, frag)
+					.addToBackStack(null)
+					.commit();
 		}
 		else {
-			fragTrans.replace(R.id.fragmentContainerB, frag).commit();
+			fragTrans.replace(R.id.fragmentContainerB, frag)
+					.commit();
 		}
-
 	}
 
 	// Boolean indicates whether it was a button press or a long press
@@ -95,14 +99,13 @@ public class MainActivity extends Activity implements
 			savedWallets.remove(savedWallets.indexOf(walletAddress));
 		}
 
-		switchFragments(WalletFragment.newInstance(
-							savedWallets,getJsonString(getResources()
+		switchFragments(WalletFragment.newInstance(savedWallets,getJsonString(getResources()
 						   					.getString(R.string.wallet_api_url, walletAddress))));
 
 	}
 
 	public void onRefresh() {
-		switchFragments(TickerFragment.newInstance(getJsonString(getResources().getString(R.string.ticker_api_url))));
+		getJsonString(getResources().getString(R.string.ticker_api_url));
 	}
 
 	public String getJsonString(String url) {
@@ -159,8 +162,6 @@ public class MainActivity extends Activity implements
 				}
 				if(in != null) {
 					in.close();
-				}
-				else {
 				}
 			}
 			catch(Exception e) {
