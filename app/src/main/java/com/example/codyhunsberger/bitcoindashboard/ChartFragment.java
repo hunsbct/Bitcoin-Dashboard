@@ -65,6 +65,9 @@ public class ChartFragment extends Fragment {
 
 	public void chartChange(String url) {
 		displayUrl(url);
+		if (timer != null) {
+			timer.cancel();
+		}
 		timer = new Timer(60000, 1000, url);
 		timer.start();
 		Log.d("timer", "chart reloader finish");
